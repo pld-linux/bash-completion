@@ -1,10 +1,7 @@
-%define _noautocompressdoc larch p4 isql lilypond harbour dict ri
-# it doesnt't work properly on all systems
-
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20020626
+Version:	20020704
 Release:	1
 License:	GPL
 Group:		Applications/Shells

@@ -9,7 +9,7 @@ Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 URL:		http://www.caliban.org/bash/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
-Requires:	bash >= 2.05-7
+Requires:	bash >= 2.05-8
 Requires(post):	grep
 Requires(postun):	sed
 
@@ -18,6 +18,10 @@ bash-completion is a collection of shell functions that take advantage
 of the programmable completion feature of bash 2.04 and later.
 To use this collection, you ideally need bash 2.05a or later
 
+%description -l pl
+bash-completion jest kolekca funkcji shell, które opieraj siê
+ na wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego.
+Aby u¿yæ tej kolekcji, potrzebujesz basha 2.05 lub pó¼niejszego
 
 %prep
 %setup -q -n bash_completion

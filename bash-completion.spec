@@ -1,8 +1,10 @@
+%define _noautocompressdoc larch p4 isql lilypond harbour dict ri
+
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
 Version:	20020521
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
@@ -61,6 +63,6 @@ chmod 644 /etc/bashrc
 
 %files
 %defattr(644,root,root,755)
-%doc README Changelog
+%doc README Changelog contrib
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d/

@@ -1,0 +1,12 @@
+diff -urN aaa/bash_completion/bash_completion bash_completion/bash_completion
+--- aaa/bash_completion/bash_completion	Mon Jan 27 01:41:23 2003
++++ bash_completion/bash_completion	Tue Jan 28 14:35:11 2003
+@@ -1109,7 +1109,7 @@
+ 			# if $COMP_CVS_REMOTE is not null, 'cvs commit' will
+ 			# complete on remotely checked-out files (requires
+ 			# passwordless access to the remote repository
+-			if [ -n ${COMP_CVS_REMOTE:-} ]; then
++			if [ -n "${COMP_CVS_REMOTE:-}" ]; then
+ 				# this is the least computationally intensive
+ 				# way found so far, but other changes
+ 				# (something other than changed/removed/new)

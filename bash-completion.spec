@@ -65,6 +65,6 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README Changelog contrib
+%doc README Changelog contrib BUGS
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d

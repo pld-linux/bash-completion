@@ -61,7 +61,7 @@ cat <<'EOF' > %{name}.sh
 # check for correct version of bash
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ "$bmajor" -eq 2 -a "$bminor" '>' 04 ] || [ "$bmajor" -gt 2 ]; then
-	if [ "$PS1" ] && [ -f %{_sysconfdir}/bash_completion ]; then # interactive shell
+	if [ "$PS1" ]; then # interactive shell
 		# Source completion code
 		. %{_sysconfdir}/bash_completion
 	fi

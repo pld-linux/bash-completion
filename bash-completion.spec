@@ -2,7 +2,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
 Version:	20040711
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
@@ -35,6 +35,9 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*       $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+
+# subversion comes with much better completion file
+rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion
 
 %clean
 rm -rf $RPM_BUILD_ROOT

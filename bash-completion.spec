@@ -1,6 +1,7 @@
 %define bashversion 2.05a
-Name:		bash-completion
 Summary:	bash-completion offers programmable completion for bash %{bashversion}
+Summary(pl):	Programowalne uzupe³nianie nazw dla basha %{bashversion}
+Name:		bash-completion
 Version:	20020402
 Release:	1
 Group:		Applications/Shells
@@ -20,7 +21,7 @@ this collection, you ideally need bash 2.05a or later.
 
 %description -l pl
 bash-completion jest kolekcj± funkcji shella, które opieraj± siê na
-wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego. Aby u¿ywac tej
+wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego. Aby u¿ywaæ tej
 kolekcji, potrzebujesz basha 2.05a lub pó¼niejszego.
 
 %prep
@@ -33,6 +34,7 @@ install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 gzip -9nf README Changelog
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -58,7 +60,6 @@ if [ "$1" -eq 0 ]; then
 	> /etc/bashrc.tmp
     mv -f /etc/bashrc.tmp /etc/bashrc
 fi
-
 
 %files
 %defattr(644,root,root,755)

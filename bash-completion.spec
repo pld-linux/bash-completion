@@ -1,12 +1,12 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20050112
+Version:	20050120
 Release:	1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
-# Source0-md5:	82fbd64d75fb9942519763c7188407e7
+# Source0-md5:	38e92543498dd1da4cc6a4bdeb9175f5
 Source1:	%{name}.cron
 Patch0:		%{name}-FHS.patch
 URL:		http://www.caliban.org/bash/
@@ -43,7 +43,7 @@ dope³niania linii poleceñ programu rpm.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/cron.daily,/etc/profile.d,/var/cache}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/cron.daily,/etc/shrc.d,/var/cache}
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
@@ -69,7 +69,7 @@ fi
 unset bash bminor bmajor
 EOF
 
-install %{name}.sh $RPM_BUILD_ROOT/etc/profile.d
+install %{name}.sh $RPM_BUILD_ROOT/etc/shrc.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -83,7 +83,7 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %doc README Changelog BUGS
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d/
-%attr(755,root,root) /etc/profile.d/%{name}.sh
+%attr(755,root,root) /etc/shrc.d/%{name}.sh
 
 %files rpm-cache
 %defattr(644,root,root,755)

@@ -1,20 +1,16 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20050103
-Release:	2
+Version:	20050112
+Release:	1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
-# Source0-md5:	0ee7009b18ff862f8a63c2395e5fd100
+# Source0-md5:	82fbd64d75fb9942519763c7188407e7
 Source1:	%{name}.cron
 Patch0:		%{name}-FHS.patch
 URL:		http://www.caliban.org/bash/
-Requires(post,preun):	bash
-Requires(post):	grep
-Requires(post):	textutils
-Requires(postun):	fileutils
-Requires(postun):	sed
+Requires(triggerpostun):	sed >= 4.0
 BuildArch:	noarch
 Requires:	bash >= 2.05a-3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -47,7 +43,7 @@ dope³niania linii poleceñ programu rpm.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/cron.daily,/var/cache}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/cron.daily,/etc/profile.d,/var/cache}
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
@@ -58,15 +54,11 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.daily/rpmpkgs
 # subversion comes with much better completion file
 rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+cat <<'EOF' > %{name}.sh
+# check for bash
+[ -z "$BASH_VERSION" ] && return
 
-%post
-if ! grep -q '\[ -f '%{_sysconfdir}'/bash_completion \]' \
-	%{_sysconfdir}/bashrc 2>/dev/null; then
-		umask 022
-		cat <<'EOF' >> %{_sysconfdir}/bashrc
-# START bash completion -- do not remove this line
+# check for correct version of bash
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ "$bmajor" -eq 2 -a "$bminor" '>' 04 ] || [ "$bmajor" -gt 2 ]; then
 	if [ "$PS1" ] && [ -f %{_sysconfdir}/bash_completion ]; then # interactive shell
@@ -74,24 +66,24 @@ if [ "$bmajor" -eq 2 -a "$bminor" '>' 04 ] || [ "$bmajor" -gt 2 ]; then
 		. %{_sysconfdir}/bash_completion
 	fi
 fi
-unset bash bmajor bminor
-# END bash completion -- do not remove this line
+unset bash bminor bmajor
 EOF
-fi
 
-%postun
-if [ "$1" -eq 0 ]; then
-	umask 022
-	sed -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc \
-		> /etc/bashrc.tmp
-	mv -f /etc/bashrc.tmp /etc/bashrc
-fi
+install %{name}.sh $RPM_BUILD_ROOT/etc/profile.d
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%triggerpostun -- %{name} < 20050112-1
+# legacy clean-up
+sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 
 %files
 %defattr(644,root,root,755)
 %doc README Changelog BUGS
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d/
+%attr(755,root,root) /etc/profile.d/%{name}.sh
 
 %files rpm-cache
 %attr(755,root,root) /etc/cron.daily/*

@@ -1,7 +1,7 @@
 %define bashversion 2.05a
 Name:		bash-completion
 Summary:	bash-completion offers programmable completion for bash %{bashversion}
-Version:	20020331
+Version:	20020402
 Release:	1
 Group:		Applications/Shells
 License:	GPL

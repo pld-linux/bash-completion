@@ -2,8 +2,8 @@
 Summary:	bash-completion offers programmable completion for bash %{bashversion}
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha %{bashversion}
 Name:		bash-completion
-Version:	20020402
-Release:	2
+Version:	20020404
+Release:	1
 Group:		Applications/Shells
 License:	GPL
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
@@ -12,7 +12,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
 Requires:	bash >= %{bashversion}-3
 Requires(post):	grep
-Requires(postun):	sed
+Requires(postun): sed
 
 %description
 bash-completion is a collection of shell functions that take advantage

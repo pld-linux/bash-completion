@@ -3,10 +3,11 @@ Summary:	bash-completion offers programmable completion for bash %{bashversion}
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha %{bashversion}
 Name:		bash-completion
 Version:	20020418
-Release:	1
+Release:	2
 Group:		Applications/Shells
 License:	GPL
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-man-fix.patch
 URL:		http://www.caliban.org/bash/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
@@ -26,6 +27,7 @@ kolekcji, potrzebujesz basha 2.05a lub pó¼niejszego.
 
 %prep
 %setup -q -n bash_completion
+%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT

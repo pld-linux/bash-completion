@@ -1,27 +1,27 @@
 %define bashversion 2.05a
 Name:		bash-completion
 Summary:	bash-completion offers programmable completion for bash %{bashversion}
-Version:	20020328
+Version:	20020331
 Release:	1
-Group:		System Environment/Shells
+Group:		Applications/Shells
 License:	GPL
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 URL:		http://www.caliban.org/bash/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
-Requires:	bash >= 2.05a-3
-Requires(post):	  grep
-Requires(postun): sed
+Requires:	bash >= %{bashversion}-3
+Requires(post):	grep
+Requires(postun):	sed
 
 %description
 bash-completion is a collection of shell functions that take advantage
-of the programmable completion feature of bash 2.04 and later.
-To use this collection, you ideally need bash 2.05a or later
+of the programmable completion feature of bash 2.04 and later. To use
+this collection, you ideally need bash 2.05a or later.
 
 %description -l pl
-bash-completion jest kolekcja funkcji shella, które opieraj sie
-na wbudowanych rozszerzeniach basha 2.04 lub pózniejszego.
-Aby uzywac tej kolekcji, potrzebujesz basha 2.05 lub pózniejszego
+bash-completion jest kolekcj± funkcji shella, które opieraj± siê na
+wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego. Aby u¿ywac tej
+kolekcji, potrzebujesz basha 2.05a lub pó¼niejszego.
 
 %prep
 %setup -q -n bash_completion

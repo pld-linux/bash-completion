@@ -1,12 +1,12 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20050120
+Version:	20050121
 Release:	1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
-# Source0-md5:	38e92543498dd1da4cc6a4bdeb9175f5
+# Source0-md5:	fafeed562b01a8dee079eb851579f2d2
 Source1:	%{name}.cron
 Patch0:		%{name}-FHS.patch
 URL:		http://www.caliban.org/bash/

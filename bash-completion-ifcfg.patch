@@ -1,0 +1,16 @@
+--- ../BUILD/bash_completion/bash_completion	2005-02-18 12:23:50.000000000 +0200
++++ /tmp/bash_completion	2005-02-18 12:23:15.000000000 +0200
+@@ -230,10 +230,10 @@
+ 			/etc/sysconfig/network/ifcfg-* | \
+ 			sed -ne 's|.*ifcfg-\('$cur'.*\)|\1|p' ) )
+ 	else
+-		# Assume Red Hat
++		# Assume PLD Linux
+ 		COMPREPLY=( $( command ls \
+-			/etc/sysconfig/network-scripts/ifcfg-* | \
+-			sed -ne 's|.*ifcfg-\('$cur'.*\)|\1|p' ) )
++			/etc/sysconfig/interfaces/ifcfg-* | \
++			sed -ne 's|.*ifcfg-\('$cur'.*\)|\1|;/~$/!p' ) )
+ 	fi
+ }
+ 

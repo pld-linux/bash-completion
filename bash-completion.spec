@@ -34,6 +34,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
+install contrib/*       $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,6 +66,6 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README Changelog contrib BUGS
+%doc README Changelog BUGS
 %{_sysconfdir}/bash_completion
-%dir %{_sysconfdir}/bash_completion.d
+%{_sysconfdir}/bash_completion.d/

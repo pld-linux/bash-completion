@@ -35,7 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
-install contrib/*       $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 # subversion comes with much better completion file
 rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion

@@ -10,8 +10,8 @@ URL:		http://www.caliban.org/bash/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
 Requires:	bash >= 2.05a-3
-Requires(post):	grep
-Requires(postun):	sed
+Requires(post):	  grep
+Requires(postun): sed
 
 %description
 bash-completion is a collection of shell functions that take advantage
@@ -32,6 +32,7 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
+gzip -9nf README Changelog
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -58,8 +59,9 @@ if [ "$1" -eq 0 ]; then
     mv -f /etc/bashrc.tmp /etc/bashrc
 fi
 
+
 %files
 %defattr(644,root,root,755)
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d/
-%doc README Changelog contrib/
+%doc *.gz  contrib/

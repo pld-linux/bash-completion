@@ -1,7 +1,7 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20020519
+Version:	20020521
 Release:	1
 License:	GPL
 Group:		Applications/Shells
@@ -31,7 +31,6 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 
-gzip -9nf README Changelog
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +60,6 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz  contrib/
+%doc README Changelog
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d/

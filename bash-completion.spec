@@ -30,11 +30,16 @@ kompletowanie parametrów linii poleceñ.
 
 %package rpm-cache
 Summary:	Cache result of rpm -qa
+Summary(pl):	Buforowanie wyniku rpm -qa
 Group:		Applications/Shells
 
 %description rpm-cache
 This package contains cached version of rpm -qa, which is used for rpm
 completion for faster completion.
+
+%description rpm-cache -l pl
+Ten pakiet zawiera skrypt buforuj±cy wynik rpm -qa w celu szybszego
+dope³niania linii poleceñ programu rpm.
 
 %prep
 %setup -q -n bash_completion

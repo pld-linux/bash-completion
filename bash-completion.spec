@@ -3,7 +3,7 @@ Summary:	bash-completion offers programmable completion for bash %{bashversion}
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha %{bashversion}
 Name:		bash-completion
 Version:	20020402
-Release:	1
+Release:	2
 Group:		Applications/Shells
 License:	GPL
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
@@ -44,7 +44,7 @@ if ! grep -q '\[ -f '%{_sysconfdir}'/bash_completion \]' \
     cat <<'EOF' >> %{_sysconfdir}/bashrc
 # START bash completion -- do not remove this line
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
-if [ "$PS1" ] && [ $bmajor -eq 2 ] && [ $bminor '>' 04 ] \
+if [ "$PS1" ] && [ "$bmajor" -eq 2 ] && [ "$bminor" '>' 04 ] \
    && [ -f %{_sysconfdir}/bash_completion ]; then	# interactive shell
 	# Source completion code
         . %{_sysconfdir}/bash_completion

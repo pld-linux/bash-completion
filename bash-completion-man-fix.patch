@@ -1,0 +1,12 @@
+diff -urN bash_completion-1/bash_completion bash_completion/bash_completion
+--- bash_completion-1/bash_completion	Fri Apr 19 17:21:29 2002
++++ bash_completion/bash_completion	Fri Apr 19 17:21:55 2002
+@@ -434,7 +434,7 @@
+ 
+ 	OS=$( uname -s )
+ 	if [ $OS = Linux ]; then
+-		manpath=$( manpath 2>/dev/null || man --path )
++		manpath=$( manpath 2>/dev/null || /usr/bin/man --path )
+ 	else
+ 		manpath=$MANPATH
+ 	fi

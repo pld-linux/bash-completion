@@ -86,5 +86,6 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %attr(755,root,root) /etc/profile.d/%{name}.sh
 
 %files rpm-cache
+%defattr(644,root,root,755)
 %attr(755,root,root) /etc/cron.daily/*
 %ghost /var/cache/rpmpkgs.txt

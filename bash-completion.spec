@@ -1,7 +1,7 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20030118
+Version:	20030126
 Release:	1
 License:	GPL
 Group:		Applications/Shells

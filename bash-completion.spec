@@ -7,7 +7,10 @@ License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 URL:		http://www.caliban.org/bash/
+Requires(post,preun):	bash
 Requires(post):	grep
+Requires(post):	textutils
+Requires(postun):	fileutils
 Requires(postun):	sed
 BuildArch:	noarch
 Requires:	bash >= 2.05a-3
@@ -31,20 +34,20 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
 if ! grep -q '\[ -f '%{_sysconfdir}'/bash_completion \]' \
 	%{_sysconfdir}/bashrc 2>/dev/null; then
+		umask 022
 		cat <<'EOF' >> %{_sysconfdir}/bashrc
 # START bash completion -- do not remove this line
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ "$PS1" ] && [ "$bmajor" -eq 2 ] && [ "$bminor" '>' 04 ] \
 	&& [ -f %{_sysconfdir}/bash_completion ]; then	# interactive shell
 	# Source completion code
-        . %{_sysconfdir}/bash_completion
+	. %{_sysconfdir}/bash_completion
 fi
 unset bash bmajor bminor
 # END bash completion -- do not remove this line
@@ -53,14 +56,14 @@ fi
 
 %postun
 if [ "$1" -eq 0 ]; then
+	umask 022
 	sed -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc \
 		> /etc/bashrc.tmp
 	mv -f /etc/bashrc.tmp /etc/bashrc
 fi
-chmod 644 /etc/bashrc
 
 %files
 %defattr(644,root,root,755)
 %doc README Changelog contrib
 %{_sysconfdir}/bash_completion
-%dir %{_sysconfdir}/bash_completion.d/
+%dir %{_sysconfdir}/bash_completion.d

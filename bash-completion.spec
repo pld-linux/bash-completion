@@ -57,6 +57,7 @@ if [ "$1" -eq 0 ]; then
 		> /etc/bashrc.tmp
 	mv -f /etc/bashrc.tmp /etc/bashrc
 fi
+chmod 644 /etc/bashrc
 
 %files
 %defattr(644,root,root,755)

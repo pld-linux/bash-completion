@@ -2,11 +2,13 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
 Version:	20050103
-Release:	1
+Release:	1.1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 # Source0-md5:	0ee7009b18ff862f8a63c2395e5fd100
+Source1:	%{name}.cron
+Patch0:		%{name}-FHS.patch
 URL:		http://www.caliban.org/bash/
 Requires(post,preun):	bash
 Requires(post):	grep
@@ -26,15 +28,27 @@ bash-completion jest kolekcj± funkcji shella, które opieraj± siê na
 wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego umo¿liwiaj±cego
 kompletowanie parametrów linii poleceñ.
 
+%package rpm-cache
+Summary:	Cache result of rpm -qa
+Group:		Applications/Shells
+
+%description rpm-cache
+This package contains cached version of rpm -qa, which is used for rpm
+completion for faster completion.
+
 %prep
 %setup -q -n bash_completion
+%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/cron.daily,/var/cache}
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.daily/rpmpkgs
+> $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
 
 # subversion comes with much better completion file
 rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion
@@ -73,3 +87,7 @@ fi
 %doc README Changelog BUGS
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d/
+
+%files rpm-cache
+%attr(755,root,root) /etc/cron.daily/*
+%ghost /var/cache/rpmpkgs.txt

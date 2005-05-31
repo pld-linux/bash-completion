@@ -1,0 +1,2 @@
+- contrib/ files should be in %{_sysconfdir}/bash_completion.d not in
+  %doc, so that we can use them.

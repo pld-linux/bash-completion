@@ -60,6 +60,9 @@ cat <<'EOF' > %{name}.sh
 # check for bash
 [ -z "$BASH_VERSION" ] && return
 
+# must be interactive shell, not script
+[[ $- = *i* ]] || return
+
 # check for correct version of bash
 bash=${BASH_VERSION%%.*}; bmajor=${bash%%.*}; bminor=${bash#*.}
 if [ "$bmajor" -eq 2 -a "$bminor" '>' 04 ] || [ "$bmajor" -gt 2 ]; then

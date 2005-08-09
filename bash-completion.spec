@@ -84,7 +84,8 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %defattr(644,root,root,755)
 %doc README Changelog BUGS
 %{_sysconfdir}/bash_completion
-%{_sysconfdir}/bash_completion.d/
+%dir %{_sysconfdir}/bash_completion.d
+%{_sysconfdir}/bash_completion.d/*
 %attr(755,root,root) /etc/shrc.d/%{name}.sh
 
 %files rpm-cache

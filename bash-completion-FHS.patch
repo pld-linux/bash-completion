@@ -1,13 +1,17 @@
---- bash_completion/bash_completion~	2005-01-04 08:37:42.000000000 +0200
-+++ bash_completion/bash_completion	2005-01-09 17:24:06.000000000 +0200
-@@ -1616,12 +1616,12 @@
+--- bash_completion/bash_completion	2005-01-04 08:37:42.000000000 +0200
++++ /tmp/bash_completion	2006-01-02 20:18:52.000000000 +0200
+@@ -1718,12 +1723,16 @@
  {
  	local i
  
 -	if [ -r /var/log/rpmpkgs -a \
 -		/var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
-+	if [ -r /var/cache/rpmpkgs.txt -a \
-+		/var/cache/rpmpkgs.txt -nt /var/lib/rpm/Packages ]; then
++	# refresh cache if writable
++	if [ -w /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -ot /var/lib/rpm/Packages ]; then
++		rpm -qa --qf '%{name}-%{version}-%{release}.%{arch}.rpm\n' 2>&1 | LC_ALL=C sort > /var/cache/rpmpkgs.txt
++	fi
++
++	if [ -r /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -nt /var/lib/rpm/Packages ]; then
  		# using RHL 7.2 or later - this is quicker than querying the DB
  		COMPREPLY=( $( sed -ne \
  		's|^\('$cur'.*\)-[0-9a-zA-Z._]\+-[0-9a-z.@]\+.*\.rpm$|\1|p' \

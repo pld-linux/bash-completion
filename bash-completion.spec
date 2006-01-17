@@ -2,19 +2,20 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
 Version:	20050721
-Release:	3
+Release:	3.1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 # Source0-md5:	4de9f0dee0663f08b5e24f64490e642e
 Source1:	%{name}.cron
+Source2:	%{name}-poldek.sh
 Patch0:		%{name}-FHS.patch
 Patch1:		%{name}-ifcfg.patch
 Patch2:		%{name}-known_hosts.patch
 URL:		http://www.caliban.org/bash/
 Requires(triggerpostun):	sed >= 4.0
-BuildArch:	noarch
 Requires:	bash >= 2.05a-3
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -55,6 +56,7 @@ install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.daily/rpmpkgs
 > $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
 
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
 # subversion comes with much better completion file
 rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion
 

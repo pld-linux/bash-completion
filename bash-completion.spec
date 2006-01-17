@@ -2,7 +2,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
 Version:	20050721
-Release:	3.1
+Release:	3.2
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
@@ -83,6 +83,13 @@ install %{name}.sh $RPM_BUILD_ROOT/etc/shrc.d
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post rpm-cache
+if [ ! -f /var/cache/rpmpkgs.txt ]; then
+	touch /var/cache/rpmpkgs.txt
+	chown root:wheel /var/cache/rpmpkgs.txt
+	chmod 664 /var/cache/rpmpkgs.txt
+fi
+
 %triggerpostun -- %{name} < 20050112-1
 # legacy clean-up
 sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
@@ -97,4 +104,4 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %files rpm-cache
 %defattr(644,root,root,755)
 %attr(755,root,root) /etc/cron.daily/*
-%ghost /var/cache/rpmpkgs.txt
+%ghost %attr(664,root,wheel) /var/cache/rpmpkgs.txt

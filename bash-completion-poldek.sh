@@ -1,16 +1,14 @@
 have poldek && {
 
 # poldek(1) completion
-# 
+#
 _poldek()
 {
-	local cur prev ver nodig nosig
+	local cur prev
 
 	COMPREPLY=()
 	cur=${COMP_WORDS[COMP_CWORD]}
 	prev=${COMP_WORDS[COMP_CWORD-1]}
-	nodig=""
-	nosig=""
 
 	if [ $COMP_CWORD -eq 1 ]; then
 		# first parameter on line

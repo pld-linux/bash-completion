@@ -5,7 +5,7 @@
  		# using RHL 7.2 or later - this is quicker than querying the DB
  		COMPREPLY=( $( sed -ne \
 -		's|^\('$cur'.*\)-[0-9a-zA-Z._]\+-[0-9a-z.@]\+.*\.rpm$|\1|p' \
-+		's|^\('$cur'.*-[0-9a-zA-Z._]\+-[0-9a-z.@]\+.*\)\.rpm$|\1|p' \
++		's|^\('$cur'.*\)\.rpm$|\1|p' \
  				/var/cache/rpmpkgs.txt ) )
  	else
 -		COMPREPLY=( $( rpm -qa $nodig $nosig | sed -ne \

@@ -8,7 +8,7 @@
 -		/var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
 +	# refresh cache if writable
 +	if [ -w /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -ot /var/lib/rpm/Packages ]; then
-+		rpm -qa --qf '%{name}-%{version}-%{release}.%{arch}.rpm\n' 2>&1 | LC_ALL=C sort > /var/cache/rpmpkgs.txt
++		rpm -qa $nodig $nosig --qf '%{name}-%{version}-%{release}.%{arch}.rpm\n' | LC_ALL=C sort > /var/cache/rpmpkgs.txt
 +	fi
 +
 +	if [ -r /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -nt /var/lib/rpm/Packages ]; then

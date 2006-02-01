@@ -14,7 +14,19 @@ _poldek()
 		# first parameter on line
 		case "$cur" in
 		--*)
-			COMPREPLY=( $( compgen -W '--help --version --erase \
+			COMPREPLY=( $( compgen -W '
+			--mkidx --makeidx --mt --nocompress --nodesc --nodiff --notimestamp
+			--dn --dt --sn --prefix --source --st --clean --clean-pkg
+			--clean-whole --cleana --sl --stl --update --up --update-whole
+			--upa --caplookup --pset --downgrade --install --reinstall
+			--upgrade --install-dist --reinstall-dist --root --upgrade-dist
+			--dump --dumpn --fetch --follow --force --fresh --greedy --hold
+			--ignore --justdb --mercy --nodeps --nohold --noignore --nofollow
+			--parsable-tr-summary --pm-force --pm-nodeps --pmopt --promoteepoch
+			--uniq --test --erase --greedy --nodeps --nofollow --test --verify
+			--priconf --split --split-out --ask --cachedir --cmd --conf --log
+			--noask --noconf --pmcmd --runas --shell --skip-installed --sudocmd
+			--upconf --help --usage --version
 			' -- $cur ) )
 			;;
 		*)

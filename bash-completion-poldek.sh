@@ -10,6 +10,14 @@ _poldek()
 	cur=${COMP_WORDS[COMP_CWORD]}
 	prev=${COMP_WORDS[COMP_CWORD-1]}
 
+#	needs to be elsewhere otherwise mode stays to --sn ;(
+#	case "$prev" in
+#	-@(n|-sn))
+#		COMPREPLY=( $( poldek -l | awk "/^$cur/{print \$1}" ) )
+#		return 0
+#		;;
+#	esac
+
 	if [ $COMP_CWORD -eq 1 ]; then
 		# first parameter on line
 		case "$cur" in

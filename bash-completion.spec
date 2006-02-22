@@ -2,13 +2,12 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
 Version:	20050721
-Release:	3.3
+Release:	4
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 # Source0-md5:	4de9f0dee0663f08b5e24f64490e642e
-Source1:	%{name}.cron
-Source2:	%{name}-poldek.sh
+Source1:	%{name}-poldek.sh
 Patch0:		%{name}-FHS.patch
 Patch1:		%{name}-ifcfg.patch
 Patch2:		%{name}-known_hosts.patch
@@ -16,6 +15,7 @@ Patch3:		%{name}-rpm-arch.patch
 URL:		http://www.caliban.org/bash/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
+Obsoletes:	bash-completion-rpm-cache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -28,19 +28,6 @@ bash-completion jest kolekcj± funkcji shella, które opieraj± siê na
 wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego umo¿liwiaj±cego
 kompletowanie parametrów linii poleceñ.
 
-%package rpm-cache
-Summary:	Cache result of rpm -qa
-Summary(pl):	Buforowanie wyniku rpm -qa
-Group:		Applications/Shells
-
-%description rpm-cache
-This package contains cached version of rpm -qa, which is used for rpm
-completion for faster completion.
-
-%description rpm-cache -l pl
-Ten pakiet zawiera skrypt buforuj±cy wynik rpm -qa w celu szybszego
-dope³niania linii poleceñ programu rpm.
-
 %prep
 %setup -q -n bash_completion
 %patch0 -p1
@@ -50,15 +37,14 @@ dope³niania linii poleceñ programu rpm.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/cron.daily,/etc/shrc.d,/var/cache}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,/var/cache}
 
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.daily/rpmpkgs
 > $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
 
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
 # subversion comes with much better completion file
 rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion
 
@@ -85,16 +71,23 @@ install %{name}.sh $RPM_BUILD_ROOT/etc/shrc.d
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post rpm-cache
+%post
 if [ ! -f /var/cache/rpmpkgs.txt ]; then
 	touch /var/cache/rpmpkgs.txt
 	chown root:wheel /var/cache/rpmpkgs.txt
 	chmod 664 /var/cache/rpmpkgs.txt
+
+	# rpm binary check for vservers
+	if [ -x /bin/rpm ]; then
+		export LC_ALL=C
+		rpm -qa --qf '%%{name}-%%{version}-%%{release}.%%{arch}.rpm\n' 2>&1 | sort > /var/cache/rpmpkgs.txt
+	fi
 fi
 
-%triggerpostun -- %{name} < 20050112-1
-# legacy clean-up
+%triggerpostun -- %{name} < 20050721-3.9
 sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
+chown root:wheel /var/cache/rpmpkgs.txt
+chmod 664 /var/cache/rpmpkgs.txt
 
 %files
 %defattr(644,root,root,755)
@@ -102,8 +95,4 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d
 %attr(755,root,root) /etc/shrc.d/%{name}.sh
-
-%files rpm-cache
-%defattr(644,root,root,755)
-%attr(755,root,root) /etc/cron.daily/*
 %ghost %attr(664,root,wheel) /var/cache/rpmpkgs.txt

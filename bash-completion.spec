@@ -1,17 +1,15 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl):	Programowalne uzupe³nianie nazw dla basha
 Name:		bash-completion
-Version:	20050721
-Release:	4
+Version:	20060301
+Release:	1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
-# Source0-md5:	4de9f0dee0663f08b5e24f64490e642e
+# Source0-md5:	ed95a89f57357a42b8e4eb95487bf9d0
 Source1:	%{name}-poldek.sh
 Patch0:		%{name}-FHS.patch
-Patch1:		%{name}-ifcfg.patch
-Patch2:		%{name}-known_hosts.patch
-Patch3:		%{name}-rpm-arch.patch
+Patch1:		%{name}-rpm-arch.patch
 URL:		http://www.caliban.org/bash/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -31,22 +29,7 @@ kompletowanie parametrów linii poleceñ.
 %prep
 %setup -q -n bash_completion
 %patch0 -p1
-%patch1 -p2
-%patch2 -p1
-%patch3 -p1
-
-%install
-rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,/var/cache}
-
-install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
-install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
-
-> $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
-
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
-# subversion comes with much better completion file
-rm $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/subversion
+%patch1 -p1
 
 cat <<'EOF' > %{name}.sh
 # check for bash
@@ -66,6 +49,14 @@ fi
 unset bash bminor bmajor
 EOF
 
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,/var/cache}
+
+install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
+install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+> $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
 install %{name}.sh $RPM_BUILD_ROOT/etc/shrc.d
 
 %clean

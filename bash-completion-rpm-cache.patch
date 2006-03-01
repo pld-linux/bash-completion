@@ -1,0 +1,19 @@
+--- bash_completion/bash_completion	2005-01-04 08:37:42.000000000 +0200
++++ bash_completion	2006-03-01 22:00:59.000000000 +0200
+@@ -1734,8 +1734,14 @@
+ {
+ 	local ver nodig nosig
+ 
+-	if [ -r /var/log/rpmpkgs -a \
+-		/var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
++	# refresh cache if writable
++	if [ /var/log/rpmpkgs -ot /var/lib/rpm/Packages -a -w /var/log/rpmpkgs ]; then
++		# we grab the output to local variable to prevent possible race
++		local tmp=$(rpm -qa $nodig $nosig --qf '%{name}-%{version}-%{release}.%{arch}.rpm\n' | LC_ALL=C sort)
++		echo "$tmp" > /var/log/rpmpkgs
++	fi
++
++	if [ -r /var/log/rpmpkgs -a /var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
+ 		# using RHL 7.2 or later - this is quicker than querying the DB
+ 		COMPREPLY=( $( sed -ne \
+ 		's|^\('$cur'.*\)-[0-9a-zA-Z._]\+-[0-9a-z.@]\+.*\.rpm$|\1|p' \

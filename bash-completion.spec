@@ -8,8 +8,10 @@ Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 # Source0-md5:	ed95a89f57357a42b8e4eb95487bf9d0
 Source1:	%{name}-poldek.sh
-Patch0:		%{name}-FHS.patch
+Source2:	%{name}.sh
+Patch0:		%{name}-rpm-cache.patch
 Patch1:		%{name}-rpm-arch.patch
+Patch2:		%{name}-FHS.patch
 URL:		http://www.caliban.org/bash/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -30,24 +32,7 @@ kompletowanie parametrów linii poleceñ.
 %setup -q -n bash_completion
 %patch0 -p1
 %patch1 -p1
-
-cat <<'EOF' > %{name}.sh
-# check for bash
-[ -z "$BASH_VERSION" ] && return
-
-# must be interactive shell, not script
-[[ $- = *i* ]] || return
-
-# check for correct version of bash
-bash=${BASH_VERSION%%.*}; bmajor=${bash%%.*}; bminor=${bash#*.}
-if [ "$bmajor" -eq 2 -a "$bminor" '>' 04 ] || [ "$bmajor" -gt 2 ]; then
-	if [ "$PS1" ]; then # interactive shell
-		# Source completion code
-		. %{_sysconfdir}/bash_completion
-	fi
-fi
-unset bash bminor bmajor
-EOF
+%patch2 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -57,7 +42,7 @@ install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 > $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
-install %{name}.sh $RPM_BUILD_ROOT/etc/shrc.d
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT

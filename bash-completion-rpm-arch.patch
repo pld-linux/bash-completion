@@ -1,16 +1,21 @@
---- bash_completion/bash_completion	2006-01-18 02:02:52.000000000 +0200
-+++ /tmp/bash_completion	2006-01-18 02:02:01.000000000 +0200
-@@ -1731,11 +1731,10 @@
+--- bash_completion/bash_completion~	2006-03-01 21:23:16.000000000 +0200
++++ bash_completion/bash_completion	2006-03-01 21:28:37.000000000 +0200
+@@ -1742,7 +1742,7 @@
  	if [ -r /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -nt /var/lib/rpm/Packages ]; then
  		# using RHL 7.2 or later - this is quicker than querying the DB
  		COMPREPLY=( $( sed -ne \
 -		's|^\('$cur'.*\)-[0-9a-zA-Z._]\+-[0-9a-z.@]\+.*\.rpm$|\1|p' \
-+		's|^\('$cur'.*\)\.rpm$|\1|p' \
++ 		's|^\('$cur'.*\)\.rpm$|\1|p' \
  				/var/cache/rpmpkgs.txt ) )
  	else
+ 		nodig=""
+@@ -1757,8 +1757,7 @@
+ 			nosig="--nosignature"
+ 		fi
+ 
 -		COMPREPLY=( $( rpm -qa $nodig $nosig | sed -ne \
 -		's|^\('$cur'.*\)-[0-9a-zA-Z._]\+-[0-9a-z.@]\+$|\1|p' ) )
-+		COMPREPLY=( $( rpm -qa $nodig $nosig --qf '%{name}-%{version}-%{release}.%{arch}\n' "$cur*" ) )
++ 		COMPREPLY=( $( rpm -qa $nodig $nosig --qf '%{name}-%{version}-%{release}.%{arch}\n' "$cur*" ) )
  	fi
  }
  

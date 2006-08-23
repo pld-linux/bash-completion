@@ -70,5 +70,5 @@ chmod 664 /var/cache/rpmpkgs.txt
 %doc README Changelog BUGS
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d
-%attr(755,root,root) /etc/shrc.d/%{name}.sh
+/etc/shrc.d/%{name}.sh
 %ghost %attr(664,root,wheel) /var/cache/rpmpkgs.txt

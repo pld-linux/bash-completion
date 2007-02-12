@@ -1,5 +1,5 @@
 Summary:	bash-completion offers programmable completion for bash
-Summary(pl.UTF-8):   Programowalne uzupełnianie nazw dla basha
+Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	20060301
 Release:	2

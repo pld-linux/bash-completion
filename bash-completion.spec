@@ -1,5 +1,5 @@
 Summary:	bash-completion offers programmable completion for bash
-Summary(pl):	Programowalne uzupe³nianie nazw dla basha
+Summary(pl.UTF-8):   Programowalne uzupeÅ‚nianie nazw dla basha
 Name:		bash-completion
 Version:	20060301
 Release:	2
@@ -24,10 +24,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 bash-completion is a collection of shell functions that take advantage
 of the programmable completion feature of bash 2.04 and later.
 
-%description -l pl
-bash-completion jest kolekcj± funkcji shella, które opieraj± siê na
-wbudowanych rozszerzeniach basha 2.04 lub pó¼niejszego umo¿liwiaj±cego
-kompletowanie parametrów linii poleceñ.
+%description -l pl.UTF-8
+bash-completion jest kolekcjÄ… funkcji shella, ktÃ³re opierajÄ… siÄ™ na
+wbudowanych rozszerzeniach basha 2.04 lub pÃ³Åºniejszego umoÅ¼liwiajÄ…cego
+kompletowanie parametrÃ³w linii poleceÅ„.
 
 %prep
 %setup -q -n bash_completion

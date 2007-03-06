@@ -7,6 +7,19 @@ _poldek()
 	local cur prev
 
 	COMPREPLY=()
+
+	case "${COMP_WORDS[1]}" in
+	-@(e|-erase))
+		if [[ "$cur" == -* ]]; then
+			COMPREPLY=( $( compgen -W '--nodeps --nofollow --test' -- $cur ) )
+		else
+			_rpm_installed_packages
+		fi
+		return 0
+		;;
+	esac
+
+
 	cur=${COMP_WORDS[COMP_CWORD]}
 	prev=${COMP_WORDS[COMP_CWORD-1]}
 
@@ -21,36 +34,26 @@ _poldek()
 		;;
 	esac
 
-		case "$cur" in
-		--*)
-			COMPREPLY=( $( compgen -W '
-			--mkidx --makeidx --mt --nocompress --nodesc --nodiff --notimestamp
-			--dn --dt --sn --prefix --source --st --clean --clean-pkg
-			--clean-whole --cleana --sl --stl --update --up --update-whole
-			--upa --caplookup --pset --downgrade --install --reinstall
-			--upgrade --install-dist --reinstall-dist --root --upgrade-dist
-			--dump --dumpn --fetch --follow --force --fresh --greedy --hold
-			--ignore --justdb --mercy --nodeps --nohold --noignore --nofollow
-			--parsable-tr-summary --pm-force --pm-nodeps --pmopt --promoteepoch
-			--uniq --test --erase --greedy --nodeps --nofollow --test --verify
-			--priconf --split --split-out --ask --cachedir --cmd --conf --log
-			--noask --noconf --pmcmd --runas --shell --skip-installed --sudocmd
-			--upconf --help --usage --version
-			' -- $cur ) )
-			;;
-		*)
-			COMPREPLY=( $( compgen -W '-F -N -O -P -Q -V -e -i -l -m -n -q -r -s -t -u -v' \
-				       -- $cur ) )
-			;;
-		esac
-
-	case "${COMP_WORDS[1]}" in
-	-@(e|-erase))
-		if [[ "$cur" == -* ]]; then
-			COMPREPLY=( $( compgen -W '--nodeps --nofollow --test' -- $cur ) )
-		else
-			_rpm_installed_packages
-		fi
+	case "$cur" in
+	--*)
+		COMPREPLY=( $( compgen -W '
+		--mkidx --makeidx --mt --nocompress --nodesc --nodiff --notimestamp
+		--dn --dt --sn --prefix --source --st --clean --clean-pkg
+		--clean-whole --cleana --sl --stl --update --up --update-whole
+		--upa --caplookup --pset --downgrade --install --reinstall
+		--upgrade --install-dist --reinstall-dist --root --upgrade-dist
+		--dump --dumpn --fetch --follow --force --fresh --greedy --hold
+		--ignore --justdb --mercy --nodeps --nohold --noignore --nofollow
+		--parsable-tr-summary --pm-force --pm-nodeps --pmopt --promoteepoch
+		--uniq --test --erase --greedy --nodeps --nofollow --test --verify
+		--priconf --split --split-out --ask --cachedir --cmd --conf --log
+		--noask --noconf --pmcmd --runas --shell --skip-installed --sudocmd
+		--upconf --help --usage --version
+		' -- $cur ) )
+		;;
+	*)
+		COMPREPLY=( $( compgen -W '-F -N -O -P -Q -V -e -i -l -m -n -q -r -s -t -u -v' \
+				   -- $cur ) )
 		;;
 	esac
 

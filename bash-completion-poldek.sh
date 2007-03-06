@@ -10,16 +10,17 @@ _poldek()
 	cur=${COMP_WORDS[COMP_CWORD]}
 	prev=${COMP_WORDS[COMP_CWORD-1]}
 
-#	needs to be elsewhere otherwise mode stays to --sn ;(
-#	case "$prev" in
-#	-@(n|-sn))
-#		COMPREPLY=( $( poldek -l | awk "/^$cur/{print \$1}" ) )
-#		return 0
-#		;;
-#	esac
+	case "$prev" in
+	-@(n|-sn))
+		COMPREPLY=( $( poldek -l | awk "/^$cur/{print \$1}" ) )
+		return 0
+		;;
+	--verify)
+		COMPREPLY=( $( compgen -W 'deps conflicts file-conflicts file-orphans file-missing-deps' -- $cur ) )
+		return 0
+		;;
+	esac
 
-	if [ $COMP_CWORD -eq 1 ]; then
-		# first parameter on line
 		case "$cur" in
 		--*)
 			COMPREPLY=( $( compgen -W '
@@ -42,9 +43,6 @@ _poldek()
 				       -- $cur ) )
 			;;
 		esac
-
-	return 0
-	fi
 
 	case "${COMP_WORDS[1]}" in
 	-@(e|-erase))

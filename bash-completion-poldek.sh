@@ -33,7 +33,7 @@ _poldek()
 	case "$cur" in
 	--verify*=*,*)
 		local p=${cur#--verify=*,}
-	   	p=${p//\\} # those backslashes propagate!!! -- kill them
+		p=${p//\\} # those backslashes propagate!!! -- kill them
 		# somewhy bash escapes equal sign, so we must match the backslash too
 		COMPREPLY=( $( compgen -P "${p%,*}," -W 'deps conflicts file-conflicts file-orphans file-missing-deps' -- "${cur##*,}" ) )
 		return 0
@@ -60,8 +60,7 @@ _poldek()
 		' -- $cur ) )
 		;;
 	*)
-		COMPREPLY=( $( compgen -W '-F -N -O -P -Q -V -e -i -l -m -n -q -r -s -t -u -v' \
-				   -- $cur ) )
+		COMPREPLY=( $( compgen -W '-F -N -O -P -Q -V -e -i -l -m -n -q -r -s -t -u -v' -- $cur ) )
 		;;
 	esac
 

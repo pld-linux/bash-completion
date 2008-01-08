@@ -2,7 +2,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	20060301
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
@@ -10,13 +10,12 @@ Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
-Patch1:		%{name}-rpm-arch.patch
-Patch2:		%{name}-FHS.patch
-Patch3:		%{name}-mplayer.patch
+Patch1:		%{name}-mplayer.patch
 URL:		http://www.caliban.org/bash/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
 Obsoletes:	bash-completion-rpm-cache
+Conflicts:	rpm < 4.0.99
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -33,8 +32,6 @@ kompletowanie parametrów linii poleceń.
 %setup -q -n bash_completion
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT

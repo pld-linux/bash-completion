@@ -5,6 +5,7 @@ have poldek && {
 _poldek()
 {
 	local cur prev
+	cur=${COMP_WORDS[COMP_CWORD]}
 
 	COMPREPLY=()
 
@@ -19,8 +20,6 @@ _poldek()
 		;;
 	esac
 
-
-	cur=${COMP_WORDS[COMP_CWORD]}
 	prev=${COMP_WORDS[COMP_CWORD-1]}
 
 	case "$prev" in

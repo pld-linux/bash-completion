@@ -1,10 +1,16 @@
---- bash_completion/bash_completion~	2006-03-01 18:20:18.000000000 +0200
-+++ bash_completion/bash_completion	2008-01-08 02:50:17.000000000 +0200
-@@ -1732,29 +1732,20 @@
+--- bash_completion/bash_completion	2008-01-08 02:50:17.000000000 +0200
++++ bash_completion/bash_completion	2008-02-20 17:08:23.134899356 +0200
+@@ -1732,29 +1732,26 @@
  #
  _rpm_installed_packages()
  {
 -	local ver nodig nosig
++	# if rpm (4.4.7+) is configured to export it's rpmdb to /var/cache/hrmib (%_hrmib_path)
++	if [ -d /var/cache/hrmib -a -r /var/cache/hrmib ]; then
++		COMPREPLY=( $( LC_ALL=C command ls -1 /var/cache/hrmib | sed -ne '/^'$cur'/p') )
++		return
++	fi
++
 +	# refresh cache if writable
 +	if [ /var/cache/rpmpkgs.txt -ot /var/lib/rpm/Packages -a -w /var/cache/rpmpkgs.txt ]; then
 +		# we grab the output to local variable to prevent possible race

@@ -54,8 +54,7 @@ if [ ! -f /var/cache/rpmpkgs.txt ]; then
 
 	# rpm binary check for vservers
 	if [ -x /bin/rpm ]; then
-		export LC_ALL=C
-		rpm -qa --qf '%%{name}-%%{version}-%%{release}.%%{arch}.rpm\n' 2>&1 | sort > /var/cache/rpmpkgs.txt
+		rpm -qa --qf '%{N}-%{V}-%{R}.%%{arch}.rpm\n' 2>&1 | LC_ALL=C sort > /var/cache/rpmpkgs.txt
 	fi
 fi
 

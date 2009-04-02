@@ -1,20 +1,12 @@
---- bash_completion/bash_completion	2006-12-28 19:32:42.210690440 +0200
-+++ bash_completion/bash_completion	2006-12-28 19:33:33.611846134 +0200
-@@ -5639,7 +5639,7 @@
- 			if [ -n "$MPLAYER_SKINS_DIR" ]; then
- 				skinsdir=$MPLAYER_SKINS_DIR
- 			else
--				skinsdir=/usr/local/share/mplayer/Skin
-+				skinsdir=/usr/share/mplayer/Skin
- 			fi
- 
- 			IFS=$'\t\n' 
-@@ -5893,7 +5893,7 @@
+--- bash-completion/bash_completion~	2009-04-02 18:59:35.000000000 +0300
++++ bash-completion/bash_completion	2009-04-02 19:01:46.032949230 +0300
+@@ -6056,7 +6056,8 @@
  					-xvidencopts -of --verbose' -- $cur) )
  			;;
  		*)
--			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fli|FLI|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|og[gm]|OG[GM]|wav|WAV|dump|DUMP|mkv|MKV|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3gp|mpc|MPC|flac|FLAC)'
-+			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fli|FLI|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|og[gm]|OG[GM]|wav|WAV|dump|DUMP|mkv|MKV|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3gp|mpc|MPC|flac|FLAC|flv|FLV)'
+-			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fl[iv]|FL[IV]|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|m4[av]|M4[AV]|og[gmavx]|OG[GMAVX]|w?(a)v|W?(A)V|dump|DUMP|mk[av]|MK[AV]|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3g[p2]|mpc|MPC|flac|FLAC|vro|VRO|divx|DIVX|aif?(f)|AIF?(F)|m2ts|M2TS)'
++			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fl[iv]|FL[IV]|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|m4[av]|M4[AV]|og[gmavx]|OG[GMAVX]|w?(a)v|W?(A)V|dump|DUMP|mk[av]|MK[AV]|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3g[p2]|mpc|MPC|flac|FLAC|vro|VRO|divx|DIVX|aif?(f)|AIF?(F)|m2ts|M2TS|flv|FLV)'
++			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fli|FLI|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|og[gm]|OG[GM]|wav|WAV|dump|DUMP|mkv|MKV|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3gp|mpc|MPC|flac|FLAC
  			;;
  	esac
  

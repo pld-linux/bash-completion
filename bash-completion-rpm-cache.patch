@@ -1,6 +1,6 @@
---- bash_completion/bash_completion	2008-01-08 02:50:17.000000000 +0200
-+++ bash_completion/bash_completion	2008-02-20 17:08:23.134899356 +0200
-@@ -1732,29 +1732,26 @@
+--- bash-completion/bash_completion~	2009-04-02 18:56:57.000000000 +0300
++++ bash-completion/bash_completion	2009-04-02 18:58:54.003383671 +0300
+@@ -1836,29 +1836,26 @@
  #
  _rpm_installed_packages()
  {
@@ -32,7 +32,7 @@
 -		nosig=""
 -		ver=$(rpm --version)
 -		ver=${ver##* }
--	  
+-
 -		if [[ "$ver" > "4.0.4" ]]; then
 -			nodig="--nodigest"
 -		fi

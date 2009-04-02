@@ -12,21 +12,21 @@
 +	fi
 +
 +	# refresh cache if writable
-+	if [ /var/cache/rpmpkgs.txt -ot /var/lib/rpm/Packages -a -w /var/cache/rpmpkgs.txt ]; then
++	if [ /var/log/rpmpkgs -ot /var/lib/rpm/Packages -a -w /var/log/rpmpkgs ]; then
 +		# we grab the output to local variable to prevent possible race
 +		local tmp=$(rpm -qa --nodigest --nosignature --qf '%{name}-%{version}-%{release}.%{arch}.rpm\n' | LC_ALL=C sort)
-+		echo "$tmp" > /var/cache/rpmpkgs.txt
++		echo "$tmp" > /var/log/rpmpkgs
 +	fi
  
 -	if [ -r /var/log/rpmpkgs -a \
 -		/var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
-+	if [ -r /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -nt /var/lib/rpm/Packages ]; then
++	if [ -r /var/log/rpmpkgs -a /var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
  		# using RHL 7.2 or later - this is quicker than querying the DB
  		COMPREPLY=( $( sed -ne \
 -		's|^\('$cur'.*\)-[0-9a-zA-Z._]\+-[0-9a-z.@]\+.*\.rpm$|\1|p' \
 -				/var/log/rpmpkgs ) )
 + 		's|^\('$cur'.*\)\.rpm$|\1|p' \
-+				/var/cache/rpmpkgs.txt ) )
++				/var/log/rpmpkgs ) )
  	else
 -		nodig=""
 -		nosig=""

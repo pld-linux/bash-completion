@@ -15,7 +15,7 @@ URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
 Obsoletes:	bash-completion-rpm-cache
-Conflicts:	rpm < 4.0.99
+Conflicts:	rpm < 4.4.9-44
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 

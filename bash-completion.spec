@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	20081219
-Release:	0.17
+Release:	0.18
 License:	GPL
 Group:		Applications/Shells
 Source0:	ftp://distfiles.gentoo.org/pub/gentoo/distfiles/%{name}-%{version}.tar.bz2
@@ -94,24 +94,30 @@ rm -rf $RPM_BUILD_ROOT
 sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 
 %triggerpostun -- %{name} < 20081219-0.1
-# No rpm in vservers
-if [ -x /bin/rpm ]; then
-	# This ugly trigger is here because we package same pathnames as ghost
-	# meaning the files will lay around from previous package version.
-
-	# get files which are ghost for us
-	files=$(rpm -ql %{name}-%{version}-%{release} | grep %{_sysconfdir}/bash_completion.d/)
-
-	# this is to get old pkg NVR, actually gives list of files that are
-	# packaged by other versions than this installed one, which is ok even for
-	# multiple bash-completion pkgs being installed.
-	oldpkg=$(rpm -qf $(echo "$files") 2>/dev/null | grep -v 'is not' | sort -u | grep -v %{name}-%{version}-%{release})
-	for a in $(rpm -ql $oldpkg | grep %{_sysconfdir}/bash_completion.d/); do
-		# remove files from old package (which are ghost in new pkg),
-		# if not already converted to symlink
-		[ -L $a ] || rm -f $a
-	done
+# don't do anything on --downgrade
+if [ $1 -le 1 ]; then
+	exit 0
 fi
+# No rpm in vservers
+if [ ! -x /bin/rpm ]; then
+	exit 0
+fi
+
+# This ugly trigger is here because we package same pathnames as ghost
+# meaning the files will lay around from previous package version.
+
+# get files which are ghost for us
+files=$(rpm -ql %{name}-%{version}-%{release} | grep %{_sysconfdir}/bash_completion.d/)
+
+# this is to get old pkg NVR, actually gives list of files that are
+# packaged by other versions than this installed one, which is ok even for
+# multiple bash-completion pkgs being installed.
+oldpkg=$(rpm -qf $(echo "$files") 2>/dev/null | grep -v 'is not' | sort -u | grep -v %{name}-%{version}-%{release})
+for a in $(rpm -ql $oldpkg | grep %{_sysconfdir}/bash_completion.d/); do
+	# remove files from old package (which are ghost in new pkg),
+	# if not already converted to symlink
+	[ -L $a ] || rm -f $a
+done
 
 # Usage: bashcomp_trigger PACKAGENAME [SCRIPTNAME]
 %define bashcomp_trigger() \

@@ -1,17 +1,17 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	20060301
-Release:	6
+Version:	20081219
+Release:	1
 License:	GPL
 Group:		Applications/Shells
-Source0:	http://www.caliban.org/files/bash/%{name}-%{version}.tar.bz2
-# Source0-md5:	ed95a89f57357a42b8e4eb95487bf9d0
+Source0:	ftp://distfiles.gentoo.org/pub/gentoo/distfiles/%{name}-%{version}.tar.bz2
+# Source0-md5:	6b8f924417fb8cd758778025d97f2853
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		%{name}-mplayer.patch
-URL:		http://www.caliban.org/bash/
+URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
 Obsoletes:	bash-completion-rpm-cache
@@ -29,7 +29,7 @@ wbudowanych rozszerzeniach basha 2.04 lub późniejszego umożliwiającego
 kompletowanie parametrów linii poleceń.
 
 %prep
-%setup -q -n bash_completion
+%setup -q -n %{name}
 %patch0 -p1
 %patch1 -p1
 
@@ -65,7 +65,7 @@ chmod 664 /var/cache/rpmpkgs.txt
 
 %files
 %defattr(644,root,root,755)
-%doc README Changelog BUGS
+%doc README TODO debian/changelog debian/copyright
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d
 /etc/shrc.d/%{name}.sh

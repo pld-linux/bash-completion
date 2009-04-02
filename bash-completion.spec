@@ -35,33 +35,17 @@ kompletowanie parametrów linii poleceń.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,/var/cache}
-
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d}
 install bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 install contrib/*	$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
-> $RPM_BUILD_ROOT/var/cache/rpmpkgs.txt
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/poldek
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-if [ ! -f /var/cache/rpmpkgs.txt ]; then
-	touch /var/cache/rpmpkgs.txt
-	chown root:wheel /var/cache/rpmpkgs.txt
-	chmod 664 /var/cache/rpmpkgs.txt
-
-	# rpm binary check for vservers
-	if [ -x /bin/rpm ]; then
-		rpm -qa --qf '%{N}-%{V}-%{R}.%%{arch}.rpm\n' 2>&1 | LC_ALL=C sort > /var/cache/rpmpkgs.txt
-	fi
-fi
-
 %triggerpostun -- %{name} < 20050721-3.9
 sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
-chown root:wheel /var/cache/rpmpkgs.txt
-chmod 664 /var/cache/rpmpkgs.txt
 
 %files
 %defattr(644,root,root,755)
@@ -69,4 +53,3 @@ chmod 664 /var/cache/rpmpkgs.txt
 %{_sysconfdir}/bash_completion
 %{_sysconfdir}/bash_completion.d
 /etc/shrc.d/%{name}.sh
-%ghost %attr(664,root,wheel) /var/cache/rpmpkgs.txt

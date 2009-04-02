@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	20081219
-Release:	0.12
+Release:	0.17
 License:	GPL
 Group:		Applications/Shells
 Source0:	ftp://distfiles.gentoo.org/pub/gentoo/distfiles/%{name}-%{version}.tar.bz2
@@ -116,12 +116,10 @@ fi
 # Usage: bashcomp_trigger PACKAGENAME [SCRIPTNAME]
 %define bashcomp_trigger() \
 %triggerin -- %1\
-set -x;\
 if [ ! -L %{_sysconfdir}/bash_completion.d/%{?2}%{!?2:%1} ] ; then\
-	ln -fs %{_datadir}/%{name}/%{?2}%{!?2:%1} %{_sysconfdir}/bash_completion.d\
+	ln -sf ../..%{_datadir}/%{name}/%{?2}%{!?2:%1} %{_sysconfdir}/bash_completion.d\
 fi\
 %triggerun -- %1\
-set -x;\
 [ $2 -gt 0 ] || rm -f %{_sysconfdir}/bash_completion.d/%{?2}%{!?2:%1}\
 %{nil}
 

@@ -83,7 +83,7 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 # Take care of contrib files
 for a in contrib/*; do
 	f=${a##*/}
-	ln -s %{_datadir}/%{name}/$f $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+	ln -s ../..%{_datadir}/%{name}/$f $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 	echo "%ghost %{_sysconfdir}/bash_completion.d/$f"
 done > %{name}-ghost.list
 

@@ -1,11 +1,11 @@
---- bash-completion/bash_completion~	2009-04-02 18:59:35.000000000 +0300
-+++ bash-completion/bash_completion	2009-04-02 19:01:46.032949230 +0300
-@@ -6056,7 +6056,7 @@
+--- bash-completion-1.0/bash_completion~	2009-04-13 16:29:17.000000000 +0300
++++ bash-completion-1.0/bash_completion	2009-04-13 16:29:55.580988051 +0300
+@@ -6174,7 +6174,7 @@
  					-xvidencopts -of --verbose' -- $cur) )
  			;;
  		*)
--			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fl[iv]|FL[IV]|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|m4[av]|M4[AV]|og[gmavx]|OG[GMAVX]|w?(a)v|W?(A)V|dump|DUMP|mk[av]|MK[AV]|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3g[p2]|mpc|MPC|flac|FLAC|vro|VRO|divx|DIVX|aif?(f)|AIF?(F)|m2ts|M2TS)'
-+			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fl[iv]|FL[IV]|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[34]|MP[34]|m4[av]|M4[AV]|og[gmavx]|OG[GMAVX]|w?(a)v|W?(A)V|dump|DUMP|mk[av]|MK[AV]|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3g[p2]|mpc|MPC|flac|FLAC|vro|VRO|divx|DIVX|aif?(f)|AIF?(F)|m2ts|M2TS|flv|FLV)'
+-			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fl[iv]|FL[IV]|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[234]|MP[234]|m4[av]|M4[AV]|og[gmavx]|OG[GMAVX]|w?(a)v|W?(A)V|dump|DUMP|mk[av]|MK[AV]|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3g[p2]|mpc|MPC|flac|FLAC|vro|VRO|divx|DIVX|aif?(f)|AIF?(F)|m2ts|M2TS|vdr|VDR|xvid|XVID|ape|APE)'
++			_filedir '@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|ASF|vob|VOB|bin|BIN|dat|DAT|vcd|VCD|ps|PS|pes|PES|fl[iv]|FL[IV]|viv|VIV|rm?(j)|RM?(J)|ra?(m)|RA?(M)|yuv|YUV|mov|MOV|qt|QT|mp[234]|MP[234]|m4[av]|M4[AV]|og[gmavx]|OG[GMAVX]|w?(a)v|W?(A)V|dump|DUMP|mk[av]|MK[AV]|m4a|M4A|aac|AAC|m2v|M2V|dv|DV|rmvb|RMVB|mid|MID|ts|TS|3g[p2]|mpc|MPC|flac|FLAC|vro|VRO|divx|DIVX|aif?(f)|AIF?(F)|m2ts|M2TS|vdr|VDR|xvid|XVID|ape|APE|flv|FLV)'
  			;;
  	esac
  

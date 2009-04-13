@@ -1,6 +1,5 @@
 # TODO
 # - bittorrent complete doesn't actually handle our prognames
-# - handle multiple package links (freeciv case)
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
@@ -49,6 +48,15 @@ rm contrib/apache2ctl
 
 # No PLD package or no such binary to complete on
 rm contrib/{harbour,larch,lisp,modules,monodevelop,p4,cowsay,cpan2dist}
+
+# split freeciv-client,freeciv-server as we have these in separate packages
+%{__sed} -ne '1,/complete -F _civserver civserver/p' contrib/freeciv > contrib/freeciv-server
+%{__sed} -ne '1,3p;/civclient/,$p' contrib/freeciv > contrib/freeciv-client
+if [ $(md5sum contrib/freeciv | awk '{print $1}') != "ee5437b709294cdc66d102c0d55573fd" ]; then
+	: check that split out contrib/freeciv-{client,server} are ok and update md5sum
+	exit 1
+fi
+rm -f contrib/freeciv
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -135,7 +143,8 @@ fi\
 %bashcomp_trigger cksfv
 %bashcomp_trigger clisp
 %bashcomp_trigger dsniff
-%bashcomp_trigger freeciv-client,freeciv-server freeciv
+%bashcomp_trigger freeciv-client
+%bashcomp_trigger freeciv-server
 %bashcomp_trigger gcc-ada gnatmake
 %bashcomp_trigger gcl
 %bashcomp_trigger gkrellm
@@ -160,7 +169,7 @@ fi\
 %bashcomp_trigger sitecopy
 %bashcomp_trigger snownews
 %bashcomp_trigger svk
-%bashcomp_trigger tightvnc,vnc vncviewer
+%bashcomp_trigger tightvnc vncviewer
 %bashcomp_trigger unace
 %bashcomp_trigger unixODBC isql
 %bashcomp_trigger unrar
@@ -179,7 +188,8 @@ fi\
 %{_datadir}/%{name}/cksfv
 %{_datadir}/%{name}/clisp
 %{_datadir}/%{name}/dsniff
-%{_datadir}/%{name}/freeciv
+%{_datadir}/%{name}/freeciv-client
+%{_datadir}/%{name}/freeciv-server
 %{_datadir}/%{name}/gcl
 %{_datadir}/%{name}/gkrellm
 %{_datadir}/%{name}/gnatmake

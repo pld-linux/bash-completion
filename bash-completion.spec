@@ -4,7 +4,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -14,6 +14,7 @@ Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		%{name}-mplayer.patch
+Patch2:		%{name}-service.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -35,6 +36,7 @@ kompletowanie parametrów linii poleceń.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 cp -a %{SOURCE1} contrib/poldek
 
 # cleanup backups after patching

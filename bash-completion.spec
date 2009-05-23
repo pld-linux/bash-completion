@@ -18,6 +18,7 @@ Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		%{name}-mplayer.patch
 Patch2:		%{name}-service.patch
+Patch3:		%{name}-psheader.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -40,6 +41,7 @@ kompletowanie parametrów linii poleceń.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 cp -a %{SOURCE1} contrib/poldek
 
 # cleanup backups after patching

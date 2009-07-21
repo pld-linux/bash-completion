@@ -2,6 +2,8 @@
 # TODO
 # - bittorrent complete doesn't actually handle our prognames
 # - use mkinitrd and update for geninitrd
+# - can we have duplicate trigger on pwdutils pkg? merge files?
+# - port msg_usage parsing back from bash-completion-1.0-2.noarch for _service
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
@@ -12,7 +14,7 @@ License:	GPL
 Group:		Applications/Shells
 #Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
 Source0:	%{name}.tar.bz2
-# Source0-md5:	296df2d2ac8b9826d73ff7d559333023
+# Source0-md5:	f4e383c20d0ac662c821c32e675c8d68
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
@@ -44,6 +46,9 @@ kompletowanie parametrów linii poleceń.
 %patch3 -p1
 cp -a %{SOURCE1} contrib/poldek
 
+# this is dir
+rm -r doc/html~
+
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 
@@ -56,12 +61,17 @@ rm contrib/apache2ctl
 # No PLD package or no such binary to complete on
 rm contrib/{harbour,larch,lisp,modules,monodevelop,p4,cowsay,cpan2dist}
 rm contrib/{cfengine,mkinitrd,repomanage,rpmcheck}
+rm contrib/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
+rm contrib/{apt-build,dselect,mock,reportbug,sysv-rc,update-alternatives}
+
+# no package to hook to
+rm contrib/configure
 
 # split freeciv-client,freeciv-server as we have these in separate packages
 mv contrib/freeciv .
 %{__sed} -ne '1,/complete -F _civserver civserver/p' freeciv > contrib/freeciv-server
 %{__sed} -ne '1,3p;/civclient/,$p' freeciv > contrib/freeciv-client
-if [ $(md5sum freeciv | awk '{print $1}') != "eb862866780086f264eb4afe1418f3a4" ]; then
+if [ $(md5sum freeciv | awk '{print $1}') != "2d3df0051726f87c11795b7292c332fc" ]; then
 	: check that split out contrib/freeciv-{client,server} are ok and update md5sum
 	exit 1
 fi
@@ -70,7 +80,7 @@ fi
 mv contrib/munin-node .
 %{__sed} -ne '1,/complete -F _munin-update munin-update/p' munin-node > contrib/munin
 %{__sed} -ne '1,3p;/munin-node-configure/,$p' munin-node > contrib/munin-node
-if [ $(md5sum munin-node | awk '{print $1}') != "c51fd6354ee73c1bf34915bc4aaa3856" ]; then
+if [ $(md5sum munin-node | awk '{print $1}') != "05a418afed08983a852145e472d5b2e9" ]; then
 	: check that split out contrib/munin{,-node} are ok and update md5sum
 	exit 1
 fi
@@ -164,6 +174,11 @@ fi\
 %{nil}
 
 %bashcomp_trigger ant
+%bashcomp_trigger apt
+%bashcomp_trigger aptitude
+%bashcomp_trigger aspell
+%bashcomp_trigger autorpm
+%bashcomp_trigger bash bash-builtins
 %bashcomp_trigger bind-utils
 %bashcomp_trigger bitkeeper
 %bashcomp_trigger BitTorrent bittorrent
@@ -172,33 +187,50 @@ fi\
 %bashcomp_trigger bzip2
 %bashcomp_trigger cdrkit,cdrtools wodim
 %bashcomp_trigger cdrtools-mkisofs,dvdrtools-mkisofs genisoimage
+%bashcomp_trigger chkconfig
 %bashcomp_trigger cksfv
 %bashcomp_trigger clisp
 %bashcomp_trigger coreutils dd
 %bashcomp_trigger cpio
+%bashcomp_trigger cups-clients cups
+%bashcomp_trigger cvsnt,cvs cvs
 %bashcomp_trigger dhcp-client dhclient
+%bashcomp_trigger dict
+%bashcomp_trigger dpkg
 %bashcomp_trigger dsniff
+%bashcomp_trigger expat xmlwf
 %bashcomp_trigger findutils
 %bashcomp_trigger freeciv-client
 %bashcomp_trigger freeciv-server
 %bashcomp_trigger gcc-ada gnatmake
+%bashcomp_trigger gcc,gcc-java,fortran,gcc-c++ gcc
 %bashcomp_trigger gcl
 %bashcomp_trigger gdb
 %bashcomp_trigger gkrellm
+%bashcomp_trigger glibc iconv
 %bashcomp_trigger glibc-misc getent
 %bashcomp_trigger gnupg2 gpg2
+%bashcomp_trigger gnupg gpg
 %bashcomp_trigger gzip
 %bashcomp_trigger heimdal
 %bashcomp_trigger ImageMagick imagemagick
+%bashcomp_trigger info,pinfo info
+%bashcomp_trigger iptables
+%bashcomp_trigger jar
+%bashcomp_trigger java-sun-jre,java-gcj-compat java
+%bashcomp_trigger kdelibs dcop
 %bashcomp_trigger ldapvi
 %bashcomp_trigger lftp
 %bashcomp_trigger libxml2-progs xmllint
+%bashcomp_trigger lilo
 %bashcomp_trigger lilypond
+%bashcomp_trigger links
 %bashcomp_trigger lvm2 lvm
 %bashcomp_trigger lzma,xz lzma
 %bashcomp_trigger lzop
 %bashcomp_trigger mailman
 %bashcomp_trigger make
+%bashcomp_trigger man
 %bashcomp_trigger mc
 %bashcomp_trigger mcrypt
 %bashcomp_trigger minicom
@@ -207,6 +239,7 @@ fi\
 %bashcomp_trigger multisync-msynctool,msynctool msynctool
 %bashcomp_trigger munin
 %bashcomp_trigger munin-node
+%bashcomp_trigger mutt
 %bashcomp_trigger mysql-client mysqladmin
 %bashcomp_trigger ncftp
 %bashcomp_trigger net-tools
@@ -215,16 +248,25 @@ fi\
 %bashcomp_trigger openldap
 %bashcomp_trigger openssh-clients ssh
 %bashcomp_trigger openssl-tools openssl
+%bashcomp_trigger pcmciautils cardctl
+%bashcomp_trigger perl-base perl
+%bashcomp_trigger pine
 %bashcomp_trigger pkgconfig pkg-config
 %bashcomp_trigger poldek
 %bashcomp_trigger postfix
 %bashcomp_trigger postgresql-clients postgresql
 %bashcomp_trigger povray
+%bashcomp_trigger procps sysctl
 %bashcomp_trigger pwdutils shadow
+%bashcomp_trigger pwdutils,shadow-extras chsh
+%bashcomp_trigger python
 %bashcomp_trigger qemu
 %bashcomp_trigger QtDBus qdbus
 %bashcomp_trigger quota-tools
+%bashcomp_trigger rcs
 %bashcomp_trigger rdesktop
+%bashcomp_trigger rpm
+%bashcomp_trigger rrdtool
 %bashcomp_trigger rsync
 %bashcomp_trigger ruby-modules ri
 %bashcomp_trigger samba-client samba
@@ -236,15 +278,21 @@ fi\
 %bashcomp_trigger strace
 %bashcomp_trigger svk
 %bashcomp_trigger tar
+%bashcomp_trigger tcpdump
 %bashcomp_trigger tightvnc vncviewer
 %bashcomp_trigger unace
 %bashcomp_trigger unixODBC isql
 %bashcomp_trigger unrar
 %bashcomp_trigger upstart-SysVinit,SysVinit sysvinit
 %bashcomp_trigger vpnc
+%bashcomp_trigger wireless-tools
+%bashcomp_trigger wvdial
 %bashcomp_trigger X11,xorg-app-xhost xhost
+%bashcomp_trigger X11,xorg-app-xrandr xrandr
 %bashcomp_trigger xen xm
 %bashcomp_trigger xmms
+%bashcomp_trigger xz
+%bashcomp_trigger yp-tools
 %bashcomp_trigger yum
 
 %files -f %{name}-ghost.list
@@ -256,40 +304,63 @@ fi\
 %dir %{_datadir}/%{name}
 # we list all files to be sure we have all of them handled by triggers
 %{_datadir}/%{name}/ant
+%{_datadir}/%{name}/apt
+%{_datadir}/%{name}/aptitude
+%{_datadir}/%{name}/aspell
+%{_datadir}/%{name}/autorpm
+%{_datadir}/%{name}/bash-builtins
 %{_datadir}/%{name}/bind-utils
 %{_datadir}/%{name}/bitkeeper
 %{_datadir}/%{name}/bittorrent
 %{_datadir}/%{name}/bluez-utils
 %{_datadir}/%{name}/brctl
 %{_datadir}/%{name}/bzip2
+%{_datadir}/%{name}/cardctl
+%{_datadir}/%{name}/chkconfig
+%{_datadir}/%{name}/chsh
 %{_datadir}/%{name}/cksfv
 %{_datadir}/%{name}/clisp
 %{_datadir}/%{name}/cpio
+%{_datadir}/%{name}/cups
+%{_datadir}/%{name}/cvs
+%{_datadir}/%{name}/dcop
 %{_datadir}/%{name}/dd
 %{_datadir}/%{name}/dhclient
+%{_datadir}/%{name}/dict
+%{_datadir}/%{name}/dpkg
 %{_datadir}/%{name}/dsniff
 %{_datadir}/%{name}/findutils
 %{_datadir}/%{name}/freeciv-client
 %{_datadir}/%{name}/freeciv-server
+%{_datadir}/%{name}/gcc
 %{_datadir}/%{name}/gcl
 %{_datadir}/%{name}/gdb
 %{_datadir}/%{name}/genisoimage
 %{_datadir}/%{name}/getent
 %{_datadir}/%{name}/gkrellm
 %{_datadir}/%{name}/gnatmake
+%{_datadir}/%{name}/gpg
 %{_datadir}/%{name}/gpg2
 %{_datadir}/%{name}/gzip
 %{_datadir}/%{name}/heimdal
+%{_datadir}/%{name}/iconv
 %{_datadir}/%{name}/imagemagick
+%{_datadir}/%{name}/info
+%{_datadir}/%{name}/iptables
 %{_datadir}/%{name}/isql
+%{_datadir}/%{name}/jar
+%{_datadir}/%{name}/java
 %{_datadir}/%{name}/ldapvi
 %{_datadir}/%{name}/lftp
+%{_datadir}/%{name}/lilo
 %{_datadir}/%{name}/lilypond
+%{_datadir}/%{name}/links
 %{_datadir}/%{name}/lvm
 %{_datadir}/%{name}/lzma
 %{_datadir}/%{name}/lzop
 %{_datadir}/%{name}/mailman
 %{_datadir}/%{name}/make
+%{_datadir}/%{name}/man
 %{_datadir}/%{name}/mc
 %{_datadir}/%{name}/mcrypt
 %{_datadir}/%{name}/minicom
@@ -298,23 +369,30 @@ fi\
 %{_datadir}/%{name}/mtx
 %{_datadir}/%{name}/munin
 %{_datadir}/%{name}/munin-node
+%{_datadir}/%{name}/mutt
 %{_datadir}/%{name}/mysqladmin
 %{_datadir}/%{name}/ncftp
 %{_datadir}/%{name}/net-tools
 %{_datadir}/%{name}/ntpdate
 %{_datadir}/%{name}/openldap
 %{_datadir}/%{name}/openssl
+%{_datadir}/%{name}/perl
+%{_datadir}/%{name}/pine
 %{_datadir}/%{name}/pkg-config
 %{_datadir}/%{name}/poldek
 %{_datadir}/%{name}/postfix
 %{_datadir}/%{name}/postgresql
 %{_datadir}/%{name}/povray
+%{_datadir}/%{name}/python
 %{_datadir}/%{name}/qdbus
 %{_datadir}/%{name}/qemu
 %{_datadir}/%{name}/quota-tools
+%{_datadir}/%{name}/rcs
 %{_datadir}/%{name}/rdesktop
 %{_datadir}/%{name}/ri
 %{_datadir}/%{name}/rpcdebug
+%{_datadir}/%{name}/rpm
+%{_datadir}/%{name}/rrdtool
 %{_datadir}/%{name}/rsync
 %{_datadir}/%{name}/samba
 %{_datadir}/%{name}/sbcl
@@ -326,15 +404,23 @@ fi\
 %{_datadir}/%{name}/ssh
 %{_datadir}/%{name}/strace
 %{_datadir}/%{name}/svk
+%{_datadir}/%{name}/sysctl
 %{_datadir}/%{name}/sysvinit
 %{_datadir}/%{name}/tar
+%{_datadir}/%{name}/tcpdump
 %{_datadir}/%{name}/unace
 %{_datadir}/%{name}/unrar
 %{_datadir}/%{name}/vncviewer
 %{_datadir}/%{name}/vpnc
+%{_datadir}/%{name}/wireless-tools
 %{_datadir}/%{name}/wodim
+%{_datadir}/%{name}/wvdial
 %{_datadir}/%{name}/xhost
 %{_datadir}/%{name}/xm
 %{_datadir}/%{name}/xmllint
+%{_datadir}/%{name}/xmlwf
 %{_datadir}/%{name}/xmms
+%{_datadir}/%{name}/xrandr
+%{_datadir}/%{name}/xz
+%{_datadir}/%{name}/yp-tools
 %{_datadir}/%{name}/yum

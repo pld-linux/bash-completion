@@ -3,18 +3,20 @@
 # - bittorrent complete doesn't actually handle our prognames
 # - use mkinitrd and update for geninitrd
 # - can we have duplicate trigger on pwdutils pkg? merge files?
-# - port msg_usage parsing back from bash-completion-1.0-2.noarch for _service
+# - fix vim not to mark this file as bash
+%define		snap	20090916
+%define		rel		0.3
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.0
-Release:	3
+Release:	3.%{snap}.%{rel}
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
 #Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
 Source0:	%{name}.tar.bz2
-# Source0-md5:	f4e383c20d0ac662c821c32e675c8d68
+# Source0-md5:	83271aa683e1cc1ebd27fd28e300d39e
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
@@ -54,6 +56,8 @@ find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 
 # packaged by subversion.spec
 rm contrib/_subversion
+# soon packaged by yum, but not yet
+mv contrib/{_,}yum
 
 # No package matches '*/apache2ctl'
 rm contrib/apache2ctl
@@ -215,6 +219,7 @@ fi\
 %bashcomp_trigger heimdal
 %bashcomp_trigger ImageMagick imagemagick
 %bashcomp_trigger info,pinfo info
+%bashcomp_trigger ipmitool
 %bashcomp_trigger iptables
 %bashcomp_trigger jar
 %bashcomp_trigger java-sun-jre,java-gcj-compat java
@@ -233,6 +238,7 @@ fi\
 %bashcomp_trigger man
 %bashcomp_trigger mc
 %bashcomp_trigger mcrypt
+%bashcomp_trigger mdadm
 %bashcomp_trigger minicom
 %bashcomp_trigger mplayer
 %bashcomp_trigger mtx
@@ -265,6 +271,7 @@ fi\
 %bashcomp_trigger quota-tools
 %bashcomp_trigger rcs
 %bashcomp_trigger rdesktop
+%bashcomp_trigger resolvconf
 %bashcomp_trigger rpm
 %bashcomp_trigger rrdtool
 %bashcomp_trigger rsync
@@ -294,6 +301,7 @@ fi\
 %bashcomp_trigger xz
 %bashcomp_trigger yp-tools
 %bashcomp_trigger yum
+%bashcomp_trigger yum-arch
 
 %files -f %{name}-ghost.list
 %defattr(644,root,root,755)
@@ -346,6 +354,7 @@ fi\
 %{_datadir}/%{name}/iconv
 %{_datadir}/%{name}/imagemagick
 %{_datadir}/%{name}/info
+%{_datadir}/%{name}/ipmitool
 %{_datadir}/%{name}/iptables
 %{_datadir}/%{name}/isql
 %{_datadir}/%{name}/jar
@@ -363,6 +372,7 @@ fi\
 %{_datadir}/%{name}/man
 %{_datadir}/%{name}/mc
 %{_datadir}/%{name}/mcrypt
+%{_datadir}/%{name}/mdadm
 %{_datadir}/%{name}/minicom
 %{_datadir}/%{name}/mplayer
 %{_datadir}/%{name}/msynctool
@@ -389,6 +399,7 @@ fi\
 %{_datadir}/%{name}/quota-tools
 %{_datadir}/%{name}/rcs
 %{_datadir}/%{name}/rdesktop
+%{_datadir}/%{name}/resolvconf
 %{_datadir}/%{name}/ri
 %{_datadir}/%{name}/rpcdebug
 %{_datadir}/%{name}/rpm
@@ -424,3 +435,4 @@ fi\
 %{_datadir}/%{name}/xz
 %{_datadir}/%{name}/yp-tools
 %{_datadir}/%{name}/yum
+%{_datadir}/%{name}/yum-arch

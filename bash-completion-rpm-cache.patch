@@ -19,12 +19,12 @@ Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
 +		return
 +	fi
 +
-+	# refresh cache if writable. FHS location
-+	if [ -w /var/cache/rpmpkgs.txt -a /var/cache/rpmpkgs.txt -ot /var/lib/rpm/Packages ]; then
++	# refresh cache if writable.
++	if [ -w /var/log/rpmpkgs -a /var/log/rpmpkgs -ot /var/lib/rpm/Packages ]; then
 +		# we grab the output to local variable to prevent possible race
 +		_rpm_nodigsig
 +		local tmp=$(rpm -qa $nodig $nosig --qf '%{name}-%{version}-%{release}.%{arch}.rpm\n')
-+		echo "$tmp" > /var/cache/rpmpkgs.txt
++		echo "$tmp" > /var/log/rpmpkgs
 +	fi
  
  	if [ -r /var/log/rpmpkgs -a \

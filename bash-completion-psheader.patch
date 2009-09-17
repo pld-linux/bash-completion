@@ -1,3 +1,8 @@
+skip sed run for ps output filtering as ps itself can omit the headers
+
+--
+Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
+
 --- bash-completion/bash_completion~	2009-05-24 01:07:50.000000000 +0300
 +++ bash-completion/bash_completion	2009-05-24 01:12:42.638288264 +0300
 @@ -447,7 +447,7 @@

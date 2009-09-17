@@ -1,3 +1,11 @@
+match Usage filters from PLD Linux initscripts
+sample initscript template can be found from here:
+
+http://svn.pld-linux.org/cgi-bin/viewsvn/rc-scripts/trunk/rc.d/init.d/template.init?rev=HEAD&view=log
+
+--
+Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
+
 --- bash-completion-1.0/bash_completion~	2009-05-12 12:05:37.000000000 +0300
 +++ bash-completion-1.0/bash_completion	2009-05-12 12:07:58.771759678 +0300
 @@ -751,7 +751,7 @@

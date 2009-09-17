@@ -1,3 +1,7 @@
+add *.flv to mplayer
+
+--
+Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
 --- bash-completion/contrib/mplayer~	2009-09-16 20:48:48.000000000 +0300
 +++ bash-completion/contrib/mplayer	2009-09-16 20:58:30.564828512 +0300
 @@ -256,7 +256,7 @@

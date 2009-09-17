@@ -4,8 +4,8 @@
 # - use mkinitrd and update for geninitrd
 # - can we have duplicate trigger on pwdutils pkg? merge files?
 # - fix vim not to mark this file as bash
-%define		snap	20090916
-%define		rel		0.3
+%define		snap	20090917
+%define		rel		0.4
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
@@ -16,7 +16,7 @@ License:	GPL
 Group:		Applications/Shells
 #Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
 Source0:	%{name}.tar.bz2
-# Source0-md5:	83271aa683e1cc1ebd27fd28e300d39e
+# Source0-md5:	ab8de6cd1b8c921ec6aa0b641364e4d0
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch

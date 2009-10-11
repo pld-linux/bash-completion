@@ -4,24 +4,19 @@
 # - use mkinitrd and update for geninitrd
 # - can we have duplicate trigger on pwdutils pkg? merge files?
 # - fix vim not to mark this file as bash
-%define		snap	20090917
-%define		rel		0.4
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	1.0
-Release:	3.%{snap}.%{rel}
+Version:	1.1
+Release:	1
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
-#Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
-Source0:	%{name}.tar.bz2
-# Source0-md5:	ab8de6cd1b8c921ec6aa0b641364e4d0
+Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
+# Source0-md5:	593d3edcf287b9e9d735049bd4d3f229
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
-Patch1:		%{name}-service.patch
-Patch2:		%{name}-psheader.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -40,14 +35,9 @@ wbudowanych rozszerzeniach basha 2.04 lub późniejszego umożliwiającego
 kompletowanie parametrów linii poleceń.
 
 %prep
-%setup -q -n %{name}
+%setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 cp -a %{SOURCE1} contrib/poldek
-
-# this is dir
-rm -r doc/html~
 
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
@@ -61,7 +51,7 @@ mv contrib/{_,}yum
 rm contrib/apache2ctl
 
 # No PLD package or no such binary to complete on
-rm contrib/{harbour,larch,lisp,modules,monodevelop,p4,cowsay,cpan2dist}
+rm contrib/{larch,lisp,modules,monodevelop,p4,cowsay,cpan2dist}
 rm contrib/{cfengine,mkinitrd,repomanage,rpmcheck}
 rm contrib/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
 rm contrib/{apt-build,dselect,mock,reportbug,sysv-rc,update-alternatives}
@@ -71,18 +61,18 @@ rm contrib/configure
 
 # split freeciv-client,freeciv-server as we have these in separate packages
 mv contrib/freeciv .
-%{__sed} -ne '1,/complete -F _civserver civserver/p' freeciv > contrib/freeciv-server
-%{__sed} -ne '1,3p;/civclient/,$p' freeciv > contrib/freeciv-client
-if [ $(md5sum freeciv | awk '{print $1}') != "2d3df0051726f87c11795b7292c332fc" ]; then
+%{__sed} -ne '/civserver completion/,/complete -F _civserver civserver/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-server
+%{__sed} -ne '/civclient completion/,/complete -F _civclient civclient/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-client
+if [ $(md5sum freeciv | awk '{print $1}') != "aaaba09338c01cf3c14bbd1bdcb0897f" ]; then
 	: check that split out contrib/freeciv-{client,server} are ok and update md5sum
 	exit 1
 fi
 
 # split munin as we have subpackage for node
 mv contrib/munin-node .
-%{__sed} -ne '1,/complete -F _munin-update munin-update/p' munin-node > contrib/munin
-%{__sed} -ne '1,3p;/munin-node-configure/,$p' munin-node > contrib/munin-node
-if [ $(md5sum munin-node | awk '{print $1}') != "05a418afed08983a852145e472d5b2e9" ]; then
+%{__sed} -ne '1,2p;/have munin-update /,/complete -F _munin-update/p;/have munin-run /,/complete -F _munin-run/p;/# Local/,/# ex:/p' munin-node > contrib/munin
+%{__sed} -ne '1,2p;/have munin-node-configure /,/complete -F _munin-node-configure/p;/# Local/,/# ex:/p' munin-node > contrib/munin-node
+if [ $(md5sum munin-node | awk '{print $1}') != "78a95bb707452778355af992e8fe30fa" ]; then
 	: check that split out contrib/munin{,-node} are ok and update md5sum
 	exit 1
 fi
@@ -90,8 +80,8 @@ fi
 # we have lastlog in sysvinit package
 mv contrib/shadow .
 %{__sed} -ne '1,/complete -F _faillog faillog/p' shadow > contrib/shadow
-%{__sed} -ne '1,3p;/lastlog/,$p' shadow > contrib/sysvinit
-if [ $(md5sum shadow | awk '{print $1}') != "4dfef3151921fd9644566a3244038f85" ]; then
+%{__sed} -ne '1,2p;/have lastlog/,$p' shadow > contrib/sysvinit
+if [ $(md5sum shadow | awk '{print $1}') != "c62642a786329aa07702b0c09965a9e8" ]; then
 	: check that split out contrib/{shadow,sysvinit} are ok and update md5sum
 	exit 1
 fi
@@ -124,7 +114,7 @@ fi
 
 cp -a bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 cp -a contrib/* $RPM_BUILD_ROOT%{_datadir}/%{name}
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
+cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 
 # Take care of contrib files
 for a in contrib/*; do
@@ -226,7 +216,6 @@ fi\
 %bashcomp_trigger lftp
 %bashcomp_trigger libxml2-progs xmllint
 %bashcomp_trigger lilo
-%bashcomp_trigger lilypond
 %bashcomp_trigger links
 %bashcomp_trigger lvm2 lvm
 %bashcomp_trigger lzma,xz lzma
@@ -270,6 +259,7 @@ fi\
 %bashcomp_trigger rcs
 %bashcomp_trigger rdesktop
 %bashcomp_trigger resolvconf
+%bashcomp_trigger rfkill
 %bashcomp_trigger rpm
 %bashcomp_trigger rrdtool
 %bashcomp_trigger rsync
@@ -360,7 +350,6 @@ fi\
 %{_datadir}/%{name}/ldapvi
 %{_datadir}/%{name}/lftp
 %{_datadir}/%{name}/lilo
-%{_datadir}/%{name}/lilypond
 %{_datadir}/%{name}/links
 %{_datadir}/%{name}/lvm
 %{_datadir}/%{name}/lzma
@@ -398,6 +387,7 @@ fi\
 %{_datadir}/%{name}/rcs
 %{_datadir}/%{name}/rdesktop
 %{_datadir}/%{name}/resolvconf
+%{_datadir}/%{name}/rfkill
 %{_datadir}/%{name}/ri
 %{_datadir}/%{name}/rpcdebug
 %{_datadir}/%{name}/rpm

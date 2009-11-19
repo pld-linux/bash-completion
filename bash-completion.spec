@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -16,6 +16,9 @@ Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.g
 # Source0-md5:	593d3edcf287b9e9d735049bd4d3f229
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
+# https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
+Source3:	http://launchpadlibrarian.net/19164189/mysqldump
+# Source3-md5:	09e4885be92e032400ed702f39925d85
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		%{name}-service.patch
 URL:		http://bash-completion.alioth.debian.org/
@@ -40,6 +43,7 @@ kompletowanie parametrów linii poleceń.
 %patch0 -p1
 %patch1 -p1
 cp -a %{SOURCE1} contrib/poldek
+cp -a %{SOURCE3} contrib/mysqldump
 
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
@@ -92,27 +96,25 @@ fi
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,%{_datadir}/%{name}}
 
-T=$(grep -c '^%%bashcomp_trigger' %{_specdir}/%{name}.spec)
-F=$(grep -c '^%%{_datadir}/%%{name}/' %{_specdir}/%{name}.spec)
-if [ $T != $F ]; then
-	check_triggers() {
-		echo >&2 "ERROR: triggers count and packaged files mismatch"
-		for f in $(awk '/^%%bashcomp_trigger/{print $3 ? $3 : $2}' %{_specdir}/%{name}.spec); do
-			A=$(awk -vf=$f '$0 == "%%{_datadir}/%%{name}/" f {print}' %{_specdir}/%{name}.spec)
-			if [ -z "$A" ]; then
-				echo >&2 "!! $f not listed in %%files"
-			fi
-		done
-		for f in $(awk -F/ '$0 ~ "^%%{_datadir}/%%{name}/"{print $NF}' %{_specdir}/%{name}.spec); do
-			A=$(awk -vf=$f '/^%%bashcomp_trigger/ && ($3 ? $3 : $2) == f' %{_specdir}/%{name}.spec)
-			if [ -z "$A" ]; then
-				echo >&2 "!! $f has no trigger"
-			fi
-		done
-	}
-	check_triggers
-	exit 1
-fi
+err=0
+check_triggers() {
+	for comp in $(awk '/^%%bashcomp_trigger/{print $3 ? $3 : $2}' %{_specdir}/%{name}.spec | tr ',' ' '); do
+		l=$(awk -vcomp=$comp '$0 == "%%{_datadir}/%%{name}/" comp {print}' %{_specdir}/%{name}.spec)
+		if [ -z "$l" ]; then
+			echo >&2 "!! $comp not listed in %%files"
+			err=1
+		fi
+	done
+	for comp in $(awk -F/ '$0 ~ "^%%{_datadir}/%%{name}/"{print $NF}' %{_specdir}/%{name}.spec); do
+		l=$(awk -vcomp=$comp '/^%%bashcomp_trigger/ && ($3 ? $3 : $2) ~ "(^|,)"comp"(,|$)"' %{_specdir}/%{name}.spec)
+		if [ -z "$l" ]; then
+			echo >&2 "!! $comp has no trigger"
+			err=1
+		fi
+	done
+}
+check_triggers
+[ "$err" != 0 ] && exit $err
 
 cp -a bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 cp -a contrib/* $RPM_BUILD_ROOT%{_datadir}/%{name}
@@ -157,14 +159,22 @@ for a in $(rpm -ql $oldpkg | grep %{_sysconfdir}/bash_completion.d/); do
 	[ -L $a ] || rm -f $a
 done
 
-# Usage: bashcomp_trigger PACKAGENAME [SCRIPTNAME]
+# Usage: bashcomp_trigger PACKAGENAME[,PACKAGENAME] [SCRIPTNAME][,SCRIPTNAME]
 %define bashcomp_trigger() \
 %triggerin -- %1\
-if [ ! -L %{_sysconfdir}/bash_completion.d/%{?2}%{!?2:%1} ] ; then\
-	ln -sf ../..%{_datadir}/%{name}/%{?2}%{!?2:%1} %{_sysconfdir}/bash_completion.d\
-fi\
+for comp in {%{?2}%{!?2:%1},}; do\
+	[ "$comp" ] || continue\
+	if [ -L %{_sysconfdir}/bash_completion.d/$comp ] ; then\
+		ln -sf ../..%{_datadir}/%{name}/$comp %{_sysconfdir}/bash_completion.d\
+	fi\
+done\
 %triggerun -- %1\
-[ $2 -gt 0 ] || rm -f %{_sysconfdir}/bash_completion.d/%{?2}%{!?2:%1}\
+if [ $2 = 0 ]; then\
+	for comp in {%{?2}%{!?2:%1},}; do\
+		[ "$comp" ] || continue\
+		rm -f %{_sysconfdir}/bash_completion.d/$comp\
+	done\
+fi
 %{nil}
 
 %bashcomp_trigger ant
@@ -235,7 +245,7 @@ fi\
 %bashcomp_trigger munin
 %bashcomp_trigger munin-node
 %bashcomp_trigger mutt
-%bashcomp_trigger mysql-client mysqladmin
+%bashcomp_trigger mysql-client mysqladmin,mysqldump
 %bashcomp_trigger ncftp
 %bashcomp_trigger net-tools
 %bashcomp_trigger nfs-utils rpcdebug
@@ -370,6 +380,7 @@ fi\
 %{_datadir}/%{name}/munin-node
 %{_datadir}/%{name}/mutt
 %{_datadir}/%{name}/mysqladmin
+%{_datadir}/%{name}/mysqldump
 %{_datadir}/%{name}/ncftp
 %{_datadir}/%{name}/net-tools
 %{_datadir}/%{name}/ntpdate

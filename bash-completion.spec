@@ -17,6 +17,7 @@ Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.g
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 Patch0:		%{name}-rpm-cache.patch
+Patch1:		%{name}-service.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -37,6 +38,7 @@ kompletowanie parametrów linii poleceń.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 cp -a %{SOURCE1} contrib/poldek
 
 # cleanup backups after patching

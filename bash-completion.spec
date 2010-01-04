@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -164,7 +164,7 @@ done
 %triggerin -- %1\
 for comp in {%{?2}%{!?2:%1},}; do\
 	[ "$comp" ] || continue\
-	if [ -L %{_sysconfdir}/bash_completion.d/$comp ] ; then\
+	if [ ! -L %{_sysconfdir}/bash_completion.d/$comp ]; then\
 		ln -sf ../..%{_datadir}/%{name}/$comp %{_sysconfdir}/bash_completion.d\
 	fi\
 done\

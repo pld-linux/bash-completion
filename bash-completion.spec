@@ -24,6 +24,7 @@ Patch1:		%{name}-service.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
+Requires:	issue
 Obsoletes:	bash-completion-rpm-cache
 Conflicts:	rpm < 4.4.9-44
 BuildArch:	noarch

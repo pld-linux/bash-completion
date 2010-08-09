@@ -1,32 +1,20 @@
-support rpm (jbj rpm 4.4.7+) hrmib exports for rpm -qa filter (via %_hrmib_path /var/cache/hrmib)
-add version+release+arch to installed packages filter
+Support rpm (jbj rpm 4.4.7+) hrmib exports for rpm -qa filter (via %_hrmib_path /var/cache/hrmib)
 
 --
 Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
 
---- bash-completion-1.1/contrib/rpm~	2009-10-09 15:49:31.000000000 +0300
-+++ bash-completion-1.1/contrib/rpm	2009-10-10 23:49:53.931350555 +0300
-@@ -7,15 +7,21 @@
- {
-     local nodig="$1" nosig="$2"
+--- bash-completion-1.2/contrib/rpm~	2010-06-13 13:21:19.000000000 +0300
++++ bash-completion-1.2/contrib/rpm	2010-08-09 21:52:51.377872623 +0300
+@@ -5,6 +5,12 @@
  
+ _rpm_installed_packages()
+ {
 +    # if rpm (4.4.7+) is configured to export it's rpmdb to /var/cache/hrmib (%_hrmib_path)
 +    if [ -d /var/cache/hrmib -a -r /var/cache/hrmib ]; then
 +        COMPREPLY=( $( LC_ALL=C command ls -1 /var/cache/hrmib | sed -ne '/^'$cur'/p') )
 +        return
 +    fi
 +
-     if [ -r /var/log/rpmpkgs -a \
-         /var/log/rpmpkgs -nt /var/lib/rpm/Packages ]; then
-         # using RHL 7.2 or later - this is quicker than querying the DB
-         COMPREPLY=( $( sed -ne \
--            's|^\('$cur'[^[:space:]]*\)-[^[:space:]-]\+-[^[:space:]-]\+\.rpm$|\1|p' \
-+            's|^\('$cur'.*\)\.rpm$|\1|p' \
-             /var/log/rpmpkgs ) )
-     else
-         _rpm_nodigsig
--        COMPREPLY=( $( rpm -qa $nodig $nosig --qf='%{NAME} ' "$cur*" ) )
-+        COMPREPLY=( $( rpm -qa $nodig $nosig --qf '%{name}-%{version}-%{release}.%{arch}\n' "$cur*" ) )
-     fi
- }
+     local nodig="$1" nosig="$2"
  
+     if [[ -r /var/log/rpmpkgs && \

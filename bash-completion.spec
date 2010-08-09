@@ -7,20 +7,19 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	1.1
-Release:	3
+Version:	1.2
+Release:	1
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
 Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	593d3edcf287b9e9d735049bd4d3f229
+# Source0-md5:	457c8808ed54f2b2cdd737b1f37ffa24
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 # Source3-md5:	09e4885be92e032400ed702f39925d85
 Patch0:		%{name}-rpm-cache.patch
-Patch1:		%{name}-service.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -42,7 +41,6 @@ kompletowanie parametrów linii poleceń.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 cp -a %{SOURCE1} contrib/poldek
 cp -a %{SOURCE3} contrib/mysqldump
 
@@ -53,42 +51,43 @@ find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 rm contrib/_subversion
 # soon packaged by yum, but not yet
 mv contrib/{_,}yum
+mv contrib/{_,}yum-utils
 
 # No package matches '*/apache2ctl'
 rm contrib/apache2ctl
 
 # No PLD package or no such binary to complete on
-rm contrib/{larch,lisp,modules,monodevelop,p4,cowsay,cpan2dist}
-rm contrib/{cfengine,mkinitrd,repomanage,rpmcheck}
+rm contrib/{larch,lisp,_modules,monodevelop,p4,cowsay,cpan2dist}
+rm contrib/{cfengine,mkinitrd,rpmcheck}
 rm contrib/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
-rm contrib/{apt-build,dselect,mock,reportbug,sysv-rc,update-alternatives}
+rm contrib/{apt-build,dselect,_mock,reportbug,sysv-rc,update-alternatives,lintian}
 
 # no package to hook to
 rm contrib/configure
 
 # split freeciv-client,freeciv-server as we have these in separate packages
 mv contrib/freeciv .
-%{__sed} -ne '/civserver completion/,/complete -F _civserver civserver/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-server
-%{__sed} -ne '/civclient completion/,/complete -F _civclient civclient/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-client
-if [ $(md5sum freeciv | awk '{print $1}') != "aaaba09338c01cf3c14bbd1bdcb0897f" ]; then
+%{__sed} -ne '1,2p;/have civserver/,/complete -F _civserver civserver/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-server
+%{__sed} -ne '1,2p;/have civclient/,/complete -F _civclient civclient/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-client
+if [ $(md5sum freeciv | awk '{print $1}') != "7e3549ec737e9eef01305ad941d5e8b6" ]; then
 	: check that split out contrib/freeciv-{client,server} are ok and update md5sum
 	exit 1
 fi
 
 # split munin as we have subpackage for node
 mv contrib/munin-node .
-%{__sed} -ne '1,2p;/have munin-update /,/complete -F _munin-update/p;/have munin-run /,/complete -F _munin-run/p;/# Local/,/# ex:/p' munin-node > contrib/munin
-%{__sed} -ne '1,2p;/have munin-node-configure /,/complete -F _munin-node-configure/p;/# Local/,/# ex:/p' munin-node > contrib/munin-node
-if [ $(md5sum munin-node | awk '{print $1}') != "78a95bb707452778355af992e8fe30fa" ]; then
+%{__sed} -ne '1,2p;/have munin-run/,/complete -F _munin_update/p;/# Local/,/# ex:/p' munin-node > contrib/munin
+%{__sed} -ne '1,2p;/have munin-node-configure /,/complete -F _munin_node_configure/p;/# Local/,/# ex:/p' munin-node > contrib/munin-node
+if [ $(md5sum munin-node | awk '{print $1}') != "0f7b9278eafe5b822a18c1bc7cc2e026" ]; then
 	: check that split out contrib/munin{,-node} are ok and update md5sum
 	exit 1
 fi
 
 # we have lastlog in sysvinit package
 mv contrib/shadow .
-%{__sed} -ne '1,/complete -F _faillog faillog/p' shadow > contrib/shadow
+%{__sed} -ne '1,/complete -F _faillog faillog/p;/# Local/,/# ex:/p' shadow > contrib/shadow
 %{__sed} -ne '1,2p;/have lastlog/,$p' shadow > contrib/sysvinit
-if [ $(md5sum shadow | awk '{print $1}') != "c62642a786329aa07702b0c09965a9e8" ]; then
+if [ $(md5sum shadow | awk '{print $1}') != "1e54016f614554139cb910defceda1f3" ]; then
 	: check that split out contrib/{shadow,sysvinit} are ok and update md5sum
 	exit 1
 fi
@@ -178,6 +177,7 @@ if [ $2 = 0 ]; then\
 fi
 %{nil}
 
+%bashcomp_trigger abook
 %bashcomp_trigger ant
 %bashcomp_trigger apt
 %bashcomp_trigger aptitude
@@ -187,7 +187,7 @@ fi
 %bashcomp_trigger bind-utils
 %bashcomp_trigger bitkeeper
 %bashcomp_trigger BitTorrent bittorrent
-%bashcomp_trigger bluez bluez-utils
+%bashcomp_trigger bluez
 %bashcomp_trigger bridge-utils brctl
 %bashcomp_trigger bzip2
 %bashcomp_trigger cdrkit,cdrtools wodim
@@ -195,10 +195,13 @@ fi
 %bashcomp_trigger chkconfig
 %bashcomp_trigger cksfv
 %bashcomp_trigger clisp
+%bashcomp_trigger coreutils
 %bashcomp_trigger coreutils dd
 %bashcomp_trigger cpio
+%bashcomp_trigger cryptsetup-luks,cryptsetup cryptsetup
 %bashcomp_trigger cups-clients cups
 %bashcomp_trigger cvsnt,cvs cvs
+%bashcomp_trigger cvsps
 %bashcomp_trigger dhcp-client dhclient
 %bashcomp_trigger dict
 %bashcomp_trigger dpkg
@@ -207,6 +210,7 @@ fi
 %bashcomp_trigger findutils
 %bashcomp_trigger freeciv-client
 %bashcomp_trigger freeciv-server
+%bashcomp_trigger fuse
 %bashcomp_trigger gcc-ada gnatmake
 %bashcomp_trigger gcc,gcc-java,fortran,gcc-c++ gcc
 %bashcomp_trigger gcl
@@ -218,13 +222,17 @@ fi
 %bashcomp_trigger gnupg gpg
 %bashcomp_trigger gzip
 %bashcomp_trigger heimdal
+%bashcomp_trigger hping2
+%bashcomp_trigger rc-scripts ifupdown
 %bashcomp_trigger ImageMagick imagemagick
 %bashcomp_trigger info,pinfo info
 %bashcomp_trigger ipmitool
+%bashcomp_trigger freeswan ipsec
 %bashcomp_trigger iptables
+%bashcomp_trigger ipv6calc
 %bashcomp_trigger jar
 %bashcomp_trigger java-sun-jre,java-gcj-compat java
-%bashcomp_trigger kdelibs dcop
+%bashcomp_trigger k3b
 %bashcomp_trigger ldapvi
 %bashcomp_trigger lftp
 %bashcomp_trigger libxml2-progs xmllint
@@ -239,7 +247,10 @@ fi
 %bashcomp_trigger mc
 %bashcomp_trigger mcrypt
 %bashcomp_trigger mdadm
+%bashcomp_trigger medusa
 %bashcomp_trigger minicom
+%bashcomp_trigger module-init-tools
+%bashcomp_trigger mount
 %bashcomp_trigger mplayer
 %bashcomp_trigger mtx
 %bashcomp_trigger multisync-msynctool,msynctool msynctool
@@ -250,6 +261,7 @@ fi
 %bashcomp_trigger ncftp
 %bashcomp_trigger net-tools
 %bashcomp_trigger nfs-utils rpcdebug
+%bashcomp_trigger nmap
 %bashcomp_trigger ntp-client ntpdate
 %bashcomp_trigger openldap
 %bashcomp_trigger openssh-clients ssh
@@ -258,10 +270,12 @@ fi
 %bashcomp_trigger perl-base perl
 %bashcomp_trigger pine
 %bashcomp_trigger pkgconfig pkg-config
+%bashcomp_trigger pm-utils
 %bashcomp_trigger poldek
 %bashcomp_trigger postfix
 %bashcomp_trigger postgresql-clients postgresql
 %bashcomp_trigger povray
+%bashcomp_trigger procps
 %bashcomp_trigger procps sysctl
 %bashcomp_trigger pwdutils shadow
 %bashcomp_trigger pwdutils,shadow-extras chsh
@@ -270,6 +284,7 @@ fi
 %bashcomp_trigger QtDBus qdbus
 %bashcomp_trigger quota-tools
 %bashcomp_trigger rcs
+%bashcomp_trigger rc-scripts service
 %bashcomp_trigger rdesktop
 %bashcomp_trigger resolvconf
 %bashcomp_trigger rfkill
@@ -283,6 +298,7 @@ fi
 %bashcomp_trigger sitecopy
 %bashcomp_trigger smartmontools,smartsuite smartctl
 %bashcomp_trigger snownews
+%bashcomp_trigger sshfs-fuse sshfs
 %bashcomp_trigger strace
 %bashcomp_trigger svk
 %bashcomp_trigger tar
@@ -292,17 +308,23 @@ fi
 %bashcomp_trigger unixODBC isql
 %bashcomp_trigger unrar
 %bashcomp_trigger upstart-SysVinit,SysVinit sysvinit
+%bashcomp_trigger util-linux-ng rtcwake
+%bashcomp_trigger util-linux,util-linux-ng util-linux
 %bashcomp_trigger vpnc
 %bashcomp_trigger wireless-tools
+%bashcomp_trigger wol
+%bashcomp_trigger wtf
 %bashcomp_trigger wvdial
 %bashcomp_trigger X11,xorg-app-xhost xhost
 %bashcomp_trigger X11,xorg-app-xrandr xrandr
 %bashcomp_trigger xen xm
 %bashcomp_trigger xmms
+%bashcomp_trigger xsltproc
 %bashcomp_trigger xz
 %bashcomp_trigger yp-tools
 %bashcomp_trigger yum
 %bashcomp_trigger yum-arch
+%bashcomp_trigger yum-utils
 
 %files -f %{name}-ghost.list
 %defattr(644,root,root,755)
@@ -312,6 +334,7 @@ fi
 %dir %{_sysconfdir}/bash_completion.d
 %dir %{_datadir}/%{name}
 # we list all files to be sure we have all of them handled by triggers
+%{_datadir}/%{name}/abook
 %{_datadir}/%{name}/ant
 %{_datadir}/%{name}/apt
 %{_datadir}/%{name}/aptitude
@@ -321,7 +344,7 @@ fi
 %{_datadir}/%{name}/bind-utils
 %{_datadir}/%{name}/bitkeeper
 %{_datadir}/%{name}/bittorrent
-%{_datadir}/%{name}/bluez-utils
+%{_datadir}/%{name}/bluez
 %{_datadir}/%{name}/brctl
 %{_datadir}/%{name}/bzip2
 %{_datadir}/%{name}/cardctl
@@ -329,10 +352,12 @@ fi
 %{_datadir}/%{name}/chsh
 %{_datadir}/%{name}/cksfv
 %{_datadir}/%{name}/clisp
+%{_datadir}/%{name}/coreutils
 %{_datadir}/%{name}/cpio
+%{_datadir}/%{name}/cryptsetup
 %{_datadir}/%{name}/cups
 %{_datadir}/%{name}/cvs
-%{_datadir}/%{name}/dcop
+%{_datadir}/%{name}/cvsps
 %{_datadir}/%{name}/dd
 %{_datadir}/%{name}/dhclient
 %{_datadir}/%{name}/dict
@@ -341,6 +366,7 @@ fi
 %{_datadir}/%{name}/findutils
 %{_datadir}/%{name}/freeciv-client
 %{_datadir}/%{name}/freeciv-server
+%{_datadir}/%{name}/fuse
 %{_datadir}/%{name}/gcc
 %{_datadir}/%{name}/gcl
 %{_datadir}/%{name}/gdb
@@ -352,14 +378,19 @@ fi
 %{_datadir}/%{name}/gpg2
 %{_datadir}/%{name}/gzip
 %{_datadir}/%{name}/heimdal
+%{_datadir}/%{name}/hping2
 %{_datadir}/%{name}/iconv
+%{_datadir}/%{name}/ifupdown
 %{_datadir}/%{name}/imagemagick
 %{_datadir}/%{name}/info
 %{_datadir}/%{name}/ipmitool
+%{_datadir}/%{name}/ipsec
 %{_datadir}/%{name}/iptables
+%{_datadir}/%{name}/ipv6calc
 %{_datadir}/%{name}/isql
 %{_datadir}/%{name}/jar
 %{_datadir}/%{name}/java
+%{_datadir}/%{name}/k3b
 %{_datadir}/%{name}/ldapvi
 %{_datadir}/%{name}/lftp
 %{_datadir}/%{name}/lilo
@@ -373,7 +404,10 @@ fi
 %{_datadir}/%{name}/mc
 %{_datadir}/%{name}/mcrypt
 %{_datadir}/%{name}/mdadm
+%{_datadir}/%{name}/medusa
 %{_datadir}/%{name}/minicom
+%{_datadir}/%{name}/module-init-tools
+%{_datadir}/%{name}/mount
 %{_datadir}/%{name}/mplayer
 %{_datadir}/%{name}/msynctool
 %{_datadir}/%{name}/mtx
@@ -384,16 +418,19 @@ fi
 %{_datadir}/%{name}/mysqldump
 %{_datadir}/%{name}/ncftp
 %{_datadir}/%{name}/net-tools
+%{_datadir}/%{name}/nmap
 %{_datadir}/%{name}/ntpdate
 %{_datadir}/%{name}/openldap
 %{_datadir}/%{name}/openssl
 %{_datadir}/%{name}/perl
 %{_datadir}/%{name}/pine
 %{_datadir}/%{name}/pkg-config
+%{_datadir}/%{name}/pm-utils
 %{_datadir}/%{name}/poldek
 %{_datadir}/%{name}/postfix
 %{_datadir}/%{name}/postgresql
 %{_datadir}/%{name}/povray
+%{_datadir}/%{name}/procps
 %{_datadir}/%{name}/python
 %{_datadir}/%{name}/qdbus
 %{_datadir}/%{name}/qemu
@@ -407,14 +444,17 @@ fi
 %{_datadir}/%{name}/rpm
 %{_datadir}/%{name}/rrdtool
 %{_datadir}/%{name}/rsync
+%{_datadir}/%{name}/rtcwake
 %{_datadir}/%{name}/samba
 %{_datadir}/%{name}/sbcl
 %{_datadir}/%{name}/screen
+%{_datadir}/%{name}/service
 %{_datadir}/%{name}/shadow
 %{_datadir}/%{name}/sitecopy
 %{_datadir}/%{name}/smartctl
 %{_datadir}/%{name}/snownews
 %{_datadir}/%{name}/ssh
+%{_datadir}/%{name}/sshfs
 %{_datadir}/%{name}/strace
 %{_datadir}/%{name}/svk
 %{_datadir}/%{name}/sysctl
@@ -423,10 +463,13 @@ fi
 %{_datadir}/%{name}/tcpdump
 %{_datadir}/%{name}/unace
 %{_datadir}/%{name}/unrar
+%{_datadir}/%{name}/util-linux
 %{_datadir}/%{name}/vncviewer
 %{_datadir}/%{name}/vpnc
 %{_datadir}/%{name}/wireless-tools
 %{_datadir}/%{name}/wodim
+%{_datadir}/%{name}/wol
+%{_datadir}/%{name}/wtf
 %{_datadir}/%{name}/wvdial
 %{_datadir}/%{name}/xhost
 %{_datadir}/%{name}/xm
@@ -434,7 +477,9 @@ fi
 %{_datadir}/%{name}/xmlwf
 %{_datadir}/%{name}/xmms
 %{_datadir}/%{name}/xrandr
+%{_datadir}/%{name}/xsltproc
 %{_datadir}/%{name}/xz
 %{_datadir}/%{name}/yp-tools
 %{_datadir}/%{name}/yum
 %{_datadir}/%{name}/yum-arch
+%{_datadir}/%{name}/yum-utils

@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -19,6 +19,8 @@ Source2:	%{name}.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 # Source3-md5:	09e4885be92e032400ed702f39925d85
+Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?revision=285425&view=co#/pear
+# Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
 Patch0:		%{name}-rpm-cache.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
@@ -43,6 +45,7 @@ kompletowanie parametrów linii poleceń.
 %patch0 -p1
 cp -a %{SOURCE1} contrib/poldek
 cp -a %{SOURCE3} contrib/mysqldump
+cp -a %{SOURCE4} contrib/pear
 
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
@@ -177,6 +180,11 @@ if [ $2 = 0 ]; then\
 fi
 %{nil}
 
+%bashcomp_trigger BitTorrent bittorrent
+%bashcomp_trigger ImageMagick imagemagick
+%bashcomp_trigger QtDBus qdbus
+%bashcomp_trigger X11,xorg-app-xhost xhost
+%bashcomp_trigger X11,xorg-app-xrandr xrandr
 %bashcomp_trigger abook
 %bashcomp_trigger ant
 %bashcomp_trigger apt
@@ -186,7 +194,6 @@ fi
 %bashcomp_trigger bash bash-builtins
 %bashcomp_trigger bind-utils
 %bashcomp_trigger bitkeeper
-%bashcomp_trigger BitTorrent bittorrent
 %bashcomp_trigger bluez
 %bashcomp_trigger bridge-utils brctl
 %bashcomp_trigger bzip2
@@ -210,24 +217,22 @@ fi
 %bashcomp_trigger findutils
 %bashcomp_trigger freeciv-client
 %bashcomp_trigger freeciv-server
+%bashcomp_trigger freeswan ipsec
 %bashcomp_trigger fuse
-%bashcomp_trigger gcc-ada gnatmake
 %bashcomp_trigger gcc,gcc-java,fortran,gcc-c++ gcc
+%bashcomp_trigger gcc-ada gnatmake
 %bashcomp_trigger gcl
 %bashcomp_trigger gdb
 %bashcomp_trigger gkrellm
 %bashcomp_trigger glibc iconv
 %bashcomp_trigger glibc-misc getent
-%bashcomp_trigger gnupg2 gpg2
 %bashcomp_trigger gnupg gpg
+%bashcomp_trigger gnupg2 gpg2
 %bashcomp_trigger gzip
 %bashcomp_trigger heimdal
 %bashcomp_trigger hping2
-%bashcomp_trigger rc-scripts ifupdown
-%bashcomp_trigger ImageMagick imagemagick
 %bashcomp_trigger info,pinfo info
 %bashcomp_trigger ipmitool
-%bashcomp_trigger freeswan ipsec
 %bashcomp_trigger iptables
 %bashcomp_trigger ipv6calc
 %bashcomp_trigger jar
@@ -268,6 +273,7 @@ fi
 %bashcomp_trigger openssl-tools openssl
 %bashcomp_trigger pcmciautils cardctl
 %bashcomp_trigger perl-base perl
+%bashcomp_trigger php-pear-PEAR pear
 %bashcomp_trigger pine
 %bashcomp_trigger pkgconfig pkg-config
 %bashcomp_trigger pm-utils
@@ -281,10 +287,10 @@ fi
 %bashcomp_trigger pwdutils,shadow-extras chsh
 %bashcomp_trigger python
 %bashcomp_trigger qemu
-%bashcomp_trigger QtDBus qdbus
 %bashcomp_trigger quota-tools
-%bashcomp_trigger rcs
+%bashcomp_trigger rc-scripts ifupdown
 %bashcomp_trigger rc-scripts service
+%bashcomp_trigger rcs
 %bashcomp_trigger rdesktop
 %bashcomp_trigger resolvconf
 %bashcomp_trigger rfkill
@@ -308,15 +314,13 @@ fi
 %bashcomp_trigger unixODBC isql
 %bashcomp_trigger unrar
 %bashcomp_trigger upstart-SysVinit,SysVinit sysvinit
-%bashcomp_trigger util-linux-ng rtcwake
 %bashcomp_trigger util-linux,util-linux-ng util-linux
+%bashcomp_trigger util-linux-ng rtcwake
 %bashcomp_trigger vpnc
 %bashcomp_trigger wireless-tools
 %bashcomp_trigger wol
 %bashcomp_trigger wtf
 %bashcomp_trigger wvdial
-%bashcomp_trigger X11,xorg-app-xhost xhost
-%bashcomp_trigger X11,xorg-app-xrandr xrandr
 %bashcomp_trigger xen xm
 %bashcomp_trigger xmms
 %bashcomp_trigger xsltproc
@@ -422,6 +426,7 @@ fi
 %{_datadir}/%{name}/ntpdate
 %{_datadir}/%{name}/openldap
 %{_datadir}/%{name}/openssl
+%{_datadir}/%{name}/pear
 %{_datadir}/%{name}/perl
 %{_datadir}/%{name}/pine
 %{_datadir}/%{name}/pkg-config

@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.2
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -288,8 +288,7 @@ fi
 %bashcomp_trigger python
 %bashcomp_trigger qemu
 %bashcomp_trigger quota-tools
-%bashcomp_trigger rc-scripts ifupdown
-%bashcomp_trigger rc-scripts service
+%bashcomp_trigger rc-scripts service,ifupdown
 %bashcomp_trigger rcs
 %bashcomp_trigger rdesktop
 %bashcomp_trigger resolvconf

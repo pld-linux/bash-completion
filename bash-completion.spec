@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.2
-Release:	3
+Release:	4
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -22,6 +22,7 @@ Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?revision=285425&view=co#/pear
 # Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
 Patch0:		%{name}-rpm-cache.patch
+Patch1:		pear.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 2.05a-3
@@ -42,10 +43,11 @@ kompletowanie parametrów linii poleceń.
 
 %prep
 %setup -q
-%patch0 -p1
 cp -a %{SOURCE1} contrib/poldek
 cp -a %{SOURCE3} contrib/mysqldump
 cp -a %{SOURCE4} contrib/pear
+%patch0 -p1
+%patch1 -p1
 
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f

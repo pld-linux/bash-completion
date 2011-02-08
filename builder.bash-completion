@@ -1,5 +1,12 @@
 # builder(1) completion
 
+# retrieve branches from current spec
+_builder_spec_branches() {
+	local cur="$1" spec="$2" res
+	res=$(cvs status -v "$spec" | awk 'NF==3 && /branch:/{print $1}')
+	COMPREPLY=( $( compgen -W "$res" -- "$cur" ) )
+}
+
 _builder()
 {
 	local cur prev first
@@ -11,6 +18,11 @@ _builder()
 	case "$prev" in
 		-@(g|--get))
 			_filedir
+			return 0
+			;;
+		-r)
+			local spec=*.spec
+			_builder_spec_branches "$cur" "$spec"
 			return 0
 			;;
 		--with|--without)

@@ -7,13 +7,13 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	1.2
-Release:	4
+Version:	1.3
+Release:	0.1
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
-Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	457c8808ed54f2b2cdd737b1f37ffa24
+Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.bz2
+# Source0-md5:	a1262659b4bbf44dc9e59d034de505ec
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
@@ -25,7 +25,7 @@ Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
 URL:		http://bash-completion.alioth.debian.org/
 Requires(triggerpostun):	sed >= 4.0
-Requires:	bash >= 2.05a-3
+Requires:	bash >= 3.2
 Requires:	issue
 Obsoletes:	bash-completion-rpm-cache
 Conflicts:	rpm < 4.4.9-44
@@ -43,9 +43,9 @@ kompletowanie parametrów linii poleceń.
 
 %prep
 %setup -q
-cp -a %{SOURCE1} contrib/poldek
-cp -a %{SOURCE3} contrib/mysqldump
-cp -a %{SOURCE4} contrib/pear
+cp -a %{SOURCE1} completions/poldek
+cp -a %{SOURCE3} completions/mysqldump
+cp -a %{SOURCE4} completions/pear
 %patch0 -p1
 %patch1 -p1
 
@@ -53,47 +53,47 @@ cp -a %{SOURCE4} contrib/pear
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 
 # packaged by subversion.spec
-rm contrib/_subversion
+rm completions/_subversion
 # soon packaged by yum, but not yet
-mv contrib/{_,}yum
-mv contrib/{_,}yum-utils
+mv completions/{_,}yum
+mv completions/{_,}yum-utils
 
 # No package matches '*/apache2ctl'
-rm contrib/apache2ctl
+rm completions/apache2ctl
 
 # No PLD package or no such binary to complete on
-rm contrib/{larch,lisp,_modules,monodevelop,p4,cowsay,cpan2dist}
-rm contrib/{cfengine,mkinitrd,rpmcheck}
-rm contrib/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
-rm contrib/{apt-build,dselect,_mock,reportbug,sysv-rc,update-alternatives,lintian}
+rm completions/{larch,lisp,_modules,monodevelop,p4,cowsay,cpan2dist}
+rm completions/{cfengine,mkinitrd,rpmcheck}
+rm completions/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
+rm completions/{apt-build,dselect,_mock,reportbug,sysv-rc,update-alternatives,lintian}
 
 # no package to hook to
-rm contrib/configure
+rm completions/configure
 
 # split freeciv-client,freeciv-server as we have these in separate packages
-mv contrib/freeciv .
-%{__sed} -ne '1,2p;/have civserver/,/complete -F _civserver civserver/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-server
-%{__sed} -ne '1,2p;/have civclient/,/complete -F _civclient civclient/p;/# Local/,/# ex:/p' freeciv > contrib/freeciv-client
+mv completions/freeciv .
+%{__sed} -ne '1,2p;/have civserver/,/complete -F _civserver civserver/p;/# Local/,/# ex:/p' freeciv > completions/freeciv-server
+%{__sed} -ne '1,2p;/have civclient/,/complete -F _civclient civclient/p;/# Local/,/# ex:/p' freeciv > completions/freeciv-client
 if [ $(md5sum freeciv | awk '{print $1}') != "7e3549ec737e9eef01305ad941d5e8b6" ]; then
-	: check that split out contrib/freeciv-{client,server} are ok and update md5sum
+	: check that split out completions/freeciv-{client,server} are ok and update md5sum
 	exit 1
 fi
 
 # split munin as we have subpackage for node
-mv contrib/munin-node .
-%{__sed} -ne '1,2p;/have munin-run/,/complete -F _munin_update/p;/# Local/,/# ex:/p' munin-node > contrib/munin
-%{__sed} -ne '1,2p;/have munin-node-configure /,/complete -F _munin_node_configure/p;/# Local/,/# ex:/p' munin-node > contrib/munin-node
+mv completions/munin-node .
+%{__sed} -ne '1,2p;/have munin-run/,/complete -F _munin_update/p;/# Local/,/# ex:/p' munin-node > completions/munin
+%{__sed} -ne '1,2p;/have munin-node-configure /,/complete -F _munin_node_configure/p;/# Local/,/# ex:/p' munin-node > completions/munin-node
 if [ $(md5sum munin-node | awk '{print $1}') != "0f7b9278eafe5b822a18c1bc7cc2e026" ]; then
-	: check that split out contrib/munin{,-node} are ok and update md5sum
+	: check that split out completions/munin{,-node} are ok and update md5sum
 	exit 1
 fi
 
-# we have lastlog in sysvinit package
-mv contrib/shadow .
-%{__sed} -ne '1,/complete -F _faillog faillog/p;/# Local/,/# ex:/p' shadow > contrib/shadow
-%{__sed} -ne '1,2p;/have lastlog/,$p' shadow > contrib/sysvinit
-if [ $(md5sum shadow | awk '{print $1}') != "1e54016f614554139cb910defceda1f3" ]; then
-	: check that split out contrib/{shadow,sysvinit} are ok and update md5sum
+# split out 'lastlog' to completions/sysvinit
+mv completions/shadow .
+%{__sed} -ne '1,2p;/have useradd/,/complete -F _faillog/p;/# Local/,/# ex:/p' shadow > completions/shadow
+%{__sed} -ne '1,2p;/have lastlog/,$p' shadow > completions/sysvinit
+if [ $(md5sum shadow | awk '{print $1}') != "f4ad6e6db21703b802e6be3902a63b99" ]; then
+	: check that split out completions/{shadow,sysvinit} are ok and update md5sum
 	exit 1
 fi
 
@@ -122,11 +122,11 @@ check_triggers
 [ "$err" != 0 ] && exit $err
 
 cp -a bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
-cp -a contrib/* $RPM_BUILD_ROOT%{_datadir}/%{name}
+cp -a completions/* $RPM_BUILD_ROOT%{_datadir}/%{name}
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 
-# Take care of contrib files
-for a in contrib/*; do
+# Take care of completions files
+for a in completions/*; do
 	f=${a##*/}
 	ln -s ../..%{_datadir}/%{name}/$f $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 	echo "%ghost %{_sysconfdir}/bash_completion.d/$f"
@@ -333,7 +333,8 @@ fi
 
 %files -f %{name}-ghost.list
 %defattr(644,root,root,755)
-%doc README TODO
+%doc AUTHORS CHANGES README TODO
+
 /etc/shrc.d/%{name}.sh
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d

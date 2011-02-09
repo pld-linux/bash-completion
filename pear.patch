@@ -1,5 +1,5 @@
---- bash-completion-1.2/contrib/pear~	2010-08-23 20:41:58.000000000 +0300
-+++ bash-completion-1.2/contrib/pear	2010-10-19 22:52:26.008412279 +0300
+--- bash-completion-1.2/completions/pear~	2010-08-23 20:41:58.000000000 +0300
++++ bash-completion-1.2/completions/pear	2010-10-19 22:52:26.008412279 +0300
 @@ -106,6 +106,13 @@
              _filedir '@(tgz)'
              return 0

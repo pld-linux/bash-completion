@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.3
-Release:	0.1
+Release:	1
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -66,6 +66,7 @@ rm completions/{larch,lisp,_modules,monodevelop,p4,cowsay,cpan2dist}
 rm completions/{cfengine,mkinitrd,rpmcheck}
 rm completions/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
 rm completions/{apt-build,dselect,_mock,reportbug,sysv-rc,update-alternatives,lintian}
+rm completions/freerdp
 
 # no package to hook to
 rm completions/configure
@@ -106,11 +107,12 @@ check_triggers() {
 	for comp in $(awk '/^%%bashcomp_trigger/{print $3 ? $3 : $2}' %{_specdir}/%{name}.spec | tr ',' ' '); do
 		l=$(awk -vcomp=$comp '$0 == "%%{_datadir}/%%{name}/" comp {print}' %{_specdir}/%{name}.spec)
 		if [ -z "$l" ]; then
-			echo >&2 "!! $comp not listed in %%files"
+			echo >&2 "!! $comp not listed in %%{_datadir}/%{name}/"
 			err=1
 		fi
 	done
 	for comp in $(awk -F/ '$0 ~ "^%%{_datadir}/%%{name}/"{print $NF}' %{_specdir}/%{name}.spec); do
+		comp=$(echo "$comp" | sed -e 's,+,\\&,g')
 		l=$(awk -vcomp=$comp '/^%%bashcomp_trigger/ && ($3 ? $3 : $2) ~ "(^|,)"comp"(,|$)"' %{_specdir}/%{name}.spec)
 		if [ -z "$l" ]; then
 			echo >&2 "!! $comp has no trigger"
@@ -124,6 +126,13 @@ check_triggers
 cp -a bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
 cp -a completions/* $RPM_BUILD_ROOT%{_datadir}/%{name}
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
+
+# unwanted
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/Makefile*
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/Makefile*
+
+# do not generate autodeps
+chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl
 
 # Take care of completions files
 for a in completions/*; do
@@ -192,6 +201,8 @@ fi
 %bashcomp_trigger apt
 %bashcomp_trigger aptitude
 %bashcomp_trigger aspell
+%bashcomp_trigger autoconf
+%bashcomp_trigger automake
 %bashcomp_trigger autorpm
 %bashcomp_trigger bash bash-builtins
 %bashcomp_trigger bind-utils
@@ -207,6 +218,7 @@ fi
 %bashcomp_trigger coreutils
 %bashcomp_trigger coreutils dd
 %bashcomp_trigger cpio
+%bashcomp_trigger cronie,fcron,hc-cron,vixie-crond crontab
 %bashcomp_trigger cryptsetup-luks,cryptsetup cryptsetup
 %bashcomp_trigger cups-clients cups
 %bashcomp_trigger cvsnt,cvs cvs
@@ -215,6 +227,8 @@ fi
 %bashcomp_trigger dict
 %bashcomp_trigger dpkg
 %bashcomp_trigger dsniff
+%bashcomp_trigger dvd+rw-tools
+%bashcomp_trigger e2fsprogs
 %bashcomp_trigger expat xmlwf
 %bashcomp_trigger findutils
 %bashcomp_trigger freeciv-client
@@ -233,8 +247,10 @@ fi
 %bashcomp_trigger gzip
 %bashcomp_trigger heimdal
 %bashcomp_trigger hping2
+%bashcomp_trigger iftop
 %bashcomp_trigger info,pinfo info
 %bashcomp_trigger ipmitool
+%bashcomp_trigger iproute2
 %bashcomp_trigger iptables
 %bashcomp_trigger ipv6calc
 %bashcomp_trigger jar
@@ -245,6 +261,8 @@ fi
 %bashcomp_trigger libxml2-progs xmllint
 %bashcomp_trigger lilo
 %bashcomp_trigger links
+%bashcomp_trigger lrzip
+%bashcomp_trigger lsof
 %bashcomp_trigger lvm2 lvm
 %bashcomp_trigger lzma,xz lzma
 %bashcomp_trigger lzop
@@ -270,10 +288,12 @@ fi
 %bashcomp_trigger nfs-utils rpcdebug
 %bashcomp_trigger nmap
 %bashcomp_trigger ntp-client ntpdate
+%bashcomp_trigger open-iscsi
 %bashcomp_trigger openldap
 %bashcomp_trigger openssh-clients ssh
 %bashcomp_trigger openssl-tools openssl
 %bashcomp_trigger pcmciautils cardctl
+%bashcomp_trigger pdksh sh
 %bashcomp_trigger perl-base perl
 %bashcomp_trigger php-pear-PEAR pear
 %bashcomp_trigger pine
@@ -305,9 +325,11 @@ fi
 %bashcomp_trigger sitecopy
 %bashcomp_trigger smartmontools,smartsuite smartctl
 %bashcomp_trigger snownews
+%bashcomp_trigger sqlite3
 %bashcomp_trigger sshfs-fuse sshfs
 %bashcomp_trigger strace
 %bashcomp_trigger svk
+%bashcomp_trigger sysbench
 %bashcomp_trigger tar
 %bashcomp_trigger tcpdump
 %bashcomp_trigger tightvnc vncviewer
@@ -324,6 +346,8 @@ fi
 %bashcomp_trigger wvdial
 %bashcomp_trigger xen xm
 %bashcomp_trigger xmms
+%bashcomp_trigger xorg-app-xmodmap xmodmap
+%bashcomp_trigger xorg-app-xrdb xrdb
 %bashcomp_trigger xsltproc
 %bashcomp_trigger xz
 %bashcomp_trigger yp-tools
@@ -339,12 +363,17 @@ fi
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d
 %dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/helpers
+%attr(755,root,root) %{_datadir}/%{name}/helpers/perl
+
 # we list all files to be sure we have all of them handled by triggers
 %{_datadir}/%{name}/abook
 %{_datadir}/%{name}/ant
 %{_datadir}/%{name}/apt
 %{_datadir}/%{name}/aptitude
 %{_datadir}/%{name}/aspell
+%{_datadir}/%{name}/autoconf
+%{_datadir}/%{name}/automake
 %{_datadir}/%{name}/autorpm
 %{_datadir}/%{name}/bash-builtins
 %{_datadir}/%{name}/bind-utils
@@ -360,6 +389,7 @@ fi
 %{_datadir}/%{name}/clisp
 %{_datadir}/%{name}/coreutils
 %{_datadir}/%{name}/cpio
+%{_datadir}/%{name}/crontab
 %{_datadir}/%{name}/cryptsetup
 %{_datadir}/%{name}/cups
 %{_datadir}/%{name}/cvs
@@ -369,6 +399,8 @@ fi
 %{_datadir}/%{name}/dict
 %{_datadir}/%{name}/dpkg
 %{_datadir}/%{name}/dsniff
+%{_datadir}/%{name}/dvd+rw-tools
+%{_datadir}/%{name}/e2fsprogs
 %{_datadir}/%{name}/findutils
 %{_datadir}/%{name}/freeciv-client
 %{_datadir}/%{name}/freeciv-server
@@ -386,10 +418,12 @@ fi
 %{_datadir}/%{name}/heimdal
 %{_datadir}/%{name}/hping2
 %{_datadir}/%{name}/iconv
+%{_datadir}/%{name}/iftop
 %{_datadir}/%{name}/ifupdown
 %{_datadir}/%{name}/imagemagick
 %{_datadir}/%{name}/info
 %{_datadir}/%{name}/ipmitool
+%{_datadir}/%{name}/iproute2
 %{_datadir}/%{name}/ipsec
 %{_datadir}/%{name}/iptables
 %{_datadir}/%{name}/ipv6calc
@@ -401,6 +435,8 @@ fi
 %{_datadir}/%{name}/lftp
 %{_datadir}/%{name}/lilo
 %{_datadir}/%{name}/links
+%{_datadir}/%{name}/lrzip
+%{_datadir}/%{name}/lsof
 %{_datadir}/%{name}/lvm
 %{_datadir}/%{name}/lzma
 %{_datadir}/%{name}/lzop
@@ -426,6 +462,7 @@ fi
 %{_datadir}/%{name}/net-tools
 %{_datadir}/%{name}/nmap
 %{_datadir}/%{name}/ntpdate
+%{_datadir}/%{name}/open-iscsi
 %{_datadir}/%{name}/openldap
 %{_datadir}/%{name}/openssl
 %{_datadir}/%{name}/pear
@@ -456,14 +493,17 @@ fi
 %{_datadir}/%{name}/sbcl
 %{_datadir}/%{name}/screen
 %{_datadir}/%{name}/service
+%{_datadir}/%{name}/sh
 %{_datadir}/%{name}/shadow
 %{_datadir}/%{name}/sitecopy
 %{_datadir}/%{name}/smartctl
 %{_datadir}/%{name}/snownews
+%{_datadir}/%{name}/sqlite3
 %{_datadir}/%{name}/ssh
 %{_datadir}/%{name}/sshfs
 %{_datadir}/%{name}/strace
 %{_datadir}/%{name}/svk
+%{_datadir}/%{name}/sysbench
 %{_datadir}/%{name}/sysctl
 %{_datadir}/%{name}/sysvinit
 %{_datadir}/%{name}/tar
@@ -483,7 +523,9 @@ fi
 %{_datadir}/%{name}/xmllint
 %{_datadir}/%{name}/xmlwf
 %{_datadir}/%{name}/xmms
+%{_datadir}/%{name}/xmodmap
 %{_datadir}/%{name}/xrandr
+%{_datadir}/%{name}/xrdb
 %{_datadir}/%{name}/xsltproc
 %{_datadir}/%{name}/xz
 %{_datadir}/%{name}/yp-tools

@@ -24,6 +24,7 @@ Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
 URL:		http://bash-completion.alioth.debian.org/
+BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 3.2
 Requires:	issue
@@ -70,6 +71,9 @@ rm completions/freerdp
 
 # no package to hook to
 rm completions/configure
+
+# update path
+%{__sed} -i -e 's#${BASH_SOURCE\[0\]%/\*}#%{_datadir}/%{name}#' completions/perl
 
 # split freeciv-client,freeciv-server as we have these in separate packages
 mv completions/freeciv .

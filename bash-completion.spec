@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	1.3
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL
 Group:		Applications/Shells
@@ -21,6 +21,8 @@ Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 # Source3-md5:	09e4885be92e032400ed702f39925d85
 Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?revision=285425&view=co#/pear
 # Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
+# https://alioth.debian.org/tracker/?func=detail&atid=413095&aid=312910&group_id=100114
+Source5:	phing.sh
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
 URL:		http://bash-completion.alioth.debian.org/
@@ -47,6 +49,7 @@ kompletowanie parametrów linii poleceń.
 cp -a %{SOURCE1} completions/poldek
 cp -a %{SOURCE3} completions/mysqldump
 cp -a %{SOURCE4} completions/pear
+cp -a %{SOURCE5} completions/phing
 %patch0 -p1
 %patch1 -p1
 
@@ -300,6 +303,7 @@ fi
 %bashcomp_trigger pdksh sh
 %bashcomp_trigger perl-base perl
 %bashcomp_trigger php-pear-PEAR pear
+%bashcomp_trigger php-phing,phing phing
 %bashcomp_trigger pine
 %bashcomp_trigger pkgconfig pkg-config
 %bashcomp_trigger pm-utils
@@ -471,6 +475,7 @@ fi
 %{_datadir}/%{name}/openssl
 %{_datadir}/%{name}/pear
 %{_datadir}/%{name}/perl
+%{_datadir}/%{name}/phing
 %{_datadir}/%{name}/pine
 %{_datadir}/%{name}/pkg-config
 %{_datadir}/%{name}/pm-utils

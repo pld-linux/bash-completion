@@ -1,5 +1,8 @@
 # vim:ft=spec
 # TODO
+# - finish v1.3 => v2 transition:
+#   - deal with new completions
+#   - revise enabling method (files are now per-command, not per-package)
 # - bittorrent complete doesn't actually handle our prognames
 # - use mkinitrd and update for geninitrd
 # - can we have duplicate trigger on pwdutils pkg? merge files?
@@ -7,13 +10,13 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	1.3
-Release:	2
+Version:	2.0
+Release:	0.1
 Epoch:		1
-License:	GPL
+License:	GPL v2+
 Group:		Applications/Shells
 Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.bz2
-# Source0-md5:	a1262659b4bbf44dc9e59d034de505ec
+# Source0-md5:	0d903f398be8c8f24bc5ffa6f86127f8
 Source1:	%{name}-poldek.sh
 Source2:	%{name}.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
@@ -28,7 +31,7 @@ Patch1:		pear.patch
 URL:		http://bash-completion.alioth.debian.org/
 BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	sed >= 4.0
-Requires:	bash >= 3.2
+Requires:	bash >= 4.1
 Requires:	issue
 Obsoletes:	bash-completion-rpm-cache
 Conflicts:	rpm < 4.4.9-44
@@ -56,58 +59,32 @@ cp -a %{SOURCE5} completions/phing
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 
-# packaged by subversion.spec
-rm completions/_subversion
-# soon packaged by yum, but not yet
-mv completions/{_,}yum
-mv completions/{_,}yum-utils
-
-# No package matches '*/apache2ctl'
-rm completions/apache2ctl
-
-# No PLD package or no such binary to complete on
-rm completions/{larch,lisp,_modules,monodevelop,p4,cowsay,cpan2dist}
-rm completions/{cfengine,mkinitrd,rpmcheck}
-rm completions/{kldload,pkg_install,portupgrade,pkgtools} # FreeBSD Stuff
-rm completions/{apt-build,dselect,_mock,reportbug,sysv-rc,update-alternatives,lintian}
-rm completions/freerdp
-
-# no package to hook to
-rm completions/configure
-
 # update path
 %{__sed} -i -e 's#${BASH_SOURCE\[0\]%/\*}#%{_datadir}/%{name}#' completions/perl
 
-# split freeciv-client,freeciv-server as we have these in separate packages
-mv completions/freeciv .
-%{__sed} -ne '1,2p;/have civserver/,/complete -F _civserver civserver/p;/# Local/,/# ex:/p' freeciv > completions/freeciv-server
-%{__sed} -ne '1,2p;/have civclient/,/complete -F _civclient civclient/p;/# Local/,/# ex:/p' freeciv > completions/freeciv-client
-if [ $(md5sum freeciv | awk '{print $1}') != "7e3549ec737e9eef01305ad941d5e8b6" ]; then
-	: check that split out completions/freeciv-{client,server} are ok and update md5sum
-	exit 1
-fi
-
-# split munin as we have subpackage for node
-mv completions/munin-node .
-%{__sed} -ne '1,2p;/have munin-run/,/complete -F _munin_update/p;/# Local/,/# ex:/p' munin-node > completions/munin
-%{__sed} -ne '1,2p;/have munin-node-configure /,/complete -F _munin_node_configure/p;/# Local/,/# ex:/p' munin-node > completions/munin-node
-if [ $(md5sum munin-node | awk '{print $1}') != "0f7b9278eafe5b822a18c1bc7cc2e026" ]; then
-	: check that split out completions/munin{,-node} are ok and update md5sum
-	exit 1
-fi
-
-# split out 'lastlog' to completions/sysvinit
-mv completions/shadow .
-%{__sed} -ne '1,2p;/have useradd/,/complete -F _faillog/p;/# Local/,/# ex:/p' shadow > completions/shadow
-%{__sed} -ne '1,2p;/have lastlog/,$p' shadow > completions/sysvinit
-if [ $(md5sum shadow | awk '{print $1}') != "f4ad6e6db21703b802e6be3902a63b99" ]; then
-	: check that split out completions/{shadow,sysvinit} are ok and update md5sum
-	exit 1
-fi
+%build
+%configure
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,%{_datadir}/%{name}}
+#install -d $RPM_BUILD_ROOT{%{_sysconfdir}/bash_completion.d,/etc/shrc.d,%{_datadir}/%{name}}
+
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	profiledir=/etc/shrc.d
+
+cp -p completions/_yum yum
+cp -p completions/_yum-utils yum-utils
+# No package matches '*/apache2ctl'
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
+# No PLD package or no such binary to complete on
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{larch,lisp,monodevelop,p4,cowsay,cpan2dist}
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{mkinitrd,rpmcheck}
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade} # FreeBSD Stuff
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,update-alternatives,lintian}
+# no package to hook to
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/configure
 
 err=0
 check_triggers() {
@@ -130,21 +107,17 @@ check_triggers() {
 check_triggers
 [ "$err" != 0 ] && exit $err
 
-cp -a bash_completion $RPM_BUILD_ROOT%{_sysconfdir}
-cp -a completions/* $RPM_BUILD_ROOT%{_datadir}/%{name}
+# ?
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
-
-# unwanted
-rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/Makefile*
-rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/Makefile*
 
 # do not generate autodeps
 chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl
 
 # Take care of completions files
-for a in completions/*; do
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+for a in $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/*; do
 	f=${a##*/}
-	ln -s ../..%{_datadir}/%{name}/$f $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+	ln -s %{_datadir}/%{name}/completions/$f $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 	echo "%ghost %{_sysconfdir}/bash_completion.d/$f"
 done > %{name}-ghost.list
 
@@ -371,173 +344,173 @@ fi
 %{_sysconfdir}/bash_completion
 %dir %{_sysconfdir}/bash_completion.d
 %dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/completions
+# we list all files to be sure we have all of them handled by triggers
+%{_datadir}/%{name}/completions/abook
+%{_datadir}/%{name}/completions/ant
+%{_datadir}/%{name}/completions/apt
+%{_datadir}/%{name}/completions/aptitude
+%{_datadir}/%{name}/completions/aspell
+%{_datadir}/%{name}/completions/autoconf
+%{_datadir}/%{name}/completions/automake
+%{_datadir}/%{name}/completions/autorpm
+%{_datadir}/%{name}/completions/bash-builtins
+%{_datadir}/%{name}/completions/bind-utils
+%{_datadir}/%{name}/completions/bitkeeper
+%{_datadir}/%{name}/completions/bittorrent
+%{_datadir}/%{name}/completions/bluez
+%{_datadir}/%{name}/completions/brctl
+%{_datadir}/%{name}/completions/bzip2
+%{_datadir}/%{name}/completions/cardctl
+%{_datadir}/%{name}/completions/chkconfig
+%{_datadir}/%{name}/completions/chsh
+%{_datadir}/%{name}/completions/cksfv
+%{_datadir}/%{name}/completions/clisp
+%{_datadir}/%{name}/completions/coreutils
+%{_datadir}/%{name}/completions/cpio
+%{_datadir}/%{name}/completions/crontab
+%{_datadir}/%{name}/completions/cryptsetup
+%{_datadir}/%{name}/completions/cups
+%{_datadir}/%{name}/completions/cvs
+%{_datadir}/%{name}/completions/cvsps
+%{_datadir}/%{name}/completions/dd
+%{_datadir}/%{name}/completions/dhclient
+%{_datadir}/%{name}/completions/dict
+%{_datadir}/%{name}/completions/dpkg
+%{_datadir}/%{name}/completions/dsniff
+%{_datadir}/%{name}/completions/dvd+rw-tools
+%{_datadir}/%{name}/completions/e2fsprogs
+%{_datadir}/%{name}/completions/findutils
+%{_datadir}/%{name}/completions/freeciv-client
+%{_datadir}/%{name}/completions/freeciv-server
+%{_datadir}/%{name}/completions/fuse
+%{_datadir}/%{name}/completions/gcc
+%{_datadir}/%{name}/completions/gcl
+%{_datadir}/%{name}/completions/gdb
+%{_datadir}/%{name}/completions/genisoimage
+%{_datadir}/%{name}/completions/getent
+%{_datadir}/%{name}/completions/gkrellm
+%{_datadir}/%{name}/completions/gnatmake
+%{_datadir}/%{name}/completions/gpg
+%{_datadir}/%{name}/completions/gpg2
+%{_datadir}/%{name}/completions/gzip
+%{_datadir}/%{name}/completions/heimdal
+%{_datadir}/%{name}/completions/hping2
+%{_datadir}/%{name}/completions/iconv
+%{_datadir}/%{name}/completions/iftop
+%{_datadir}/%{name}/completions/ifupdown
+%{_datadir}/%{name}/completions/imagemagick
+%{_datadir}/%{name}/completions/info
+%{_datadir}/%{name}/completions/ipmitool
+%{_datadir}/%{name}/completions/iproute2
+%{_datadir}/%{name}/completions/ipsec
+%{_datadir}/%{name}/completions/iptables
+%{_datadir}/%{name}/completions/ipv6calc
+%{_datadir}/%{name}/completions/isql
+%{_datadir}/%{name}/completions/jar
+%{_datadir}/%{name}/completions/java
+%{_datadir}/%{name}/completions/k3b
+%{_datadir}/%{name}/completions/ldapvi
+%{_datadir}/%{name}/completions/lftp
+%{_datadir}/%{name}/completions/lilo
+%{_datadir}/%{name}/completions/links
+%{_datadir}/%{name}/completions/lrzip
+%{_datadir}/%{name}/completions/lsof
+%{_datadir}/%{name}/completions/lvm
+%{_datadir}/%{name}/completions/lzma
+%{_datadir}/%{name}/completions/lzop
+%{_datadir}/%{name}/completions/mailman
+%{_datadir}/%{name}/completions/make
+%{_datadir}/%{name}/completions/man
+%{_datadir}/%{name}/completions/mc
+%{_datadir}/%{name}/completions/mcrypt
+%{_datadir}/%{name}/completions/mdadm
+%{_datadir}/%{name}/completions/medusa
+%{_datadir}/%{name}/completions/minicom
+%{_datadir}/%{name}/completions/module-init-tools
+%{_datadir}/%{name}/completions/mount
+%{_datadir}/%{name}/completions/mplayer
+%{_datadir}/%{name}/completions/msynctool
+%{_datadir}/%{name}/completions/mtx
+%{_datadir}/%{name}/completions/munin
+%{_datadir}/%{name}/completions/munin-node
+%{_datadir}/%{name}/completions/mutt
+%{_datadir}/%{name}/completions/mysqladmin
+%{_datadir}/%{name}/completions/mysqldump
+%{_datadir}/%{name}/completions/ncftp
+%{_datadir}/%{name}/completions/net-tools
+%{_datadir}/%{name}/completions/nmap
+%{_datadir}/%{name}/completions/ntpdate
+%{_datadir}/%{name}/completions/open-iscsi
+%{_datadir}/%{name}/completions/openldap
+%{_datadir}/%{name}/completions/openssl
+%{_datadir}/%{name}/completions/pear
+%{_datadir}/%{name}/completions/perl
+%{_datadir}/%{name}/completions/phing
+%{_datadir}/%{name}/completions/pine
+%{_datadir}/%{name}/completions/pkg-config
+%{_datadir}/%{name}/completions/pm-utils
+%{_datadir}/%{name}/completions/poldek
+%{_datadir}/%{name}/completions/postfix
+%{_datadir}/%{name}/completions/postgresql
+%{_datadir}/%{name}/completions/povray
+%{_datadir}/%{name}/completions/procps
+%{_datadir}/%{name}/completions/python
+%{_datadir}/%{name}/completions/qdbus
+%{_datadir}/%{name}/completions/qemu
+%{_datadir}/%{name}/completions/quota-tools
+%{_datadir}/%{name}/completions/rcs
+%{_datadir}/%{name}/completions/rdesktop
+%{_datadir}/%{name}/completions/resolvconf
+%{_datadir}/%{name}/completions/rfkill
+%{_datadir}/%{name}/completions/ri
+%{_datadir}/%{name}/completions/rpcdebug
+%{_datadir}/%{name}/completions/rpm
+%{_datadir}/%{name}/completions/rrdtool
+%{_datadir}/%{name}/completions/rsync
+%{_datadir}/%{name}/completions/rtcwake
+%{_datadir}/%{name}/completions/samba
+%{_datadir}/%{name}/completions/sbcl
+%{_datadir}/%{name}/completions/screen
+%{_datadir}/%{name}/completions/service
+%{_datadir}/%{name}/completions/sh
+%{_datadir}/%{name}/completions/shadow
+%{_datadir}/%{name}/completions/sitecopy
+%{_datadir}/%{name}/completions/smartctl
+%{_datadir}/%{name}/completions/snownews
+%{_datadir}/%{name}/completions/sqlite3
+%{_datadir}/%{name}/completions/ssh
+%{_datadir}/%{name}/completions/sshfs
+%{_datadir}/%{name}/completions/strace
+%{_datadir}/%{name}/completions/svk
+%{_datadir}/%{name}/completions/sysbench
+%{_datadir}/%{name}/completions/sysctl
+%{_datadir}/%{name}/completions/sysvinit
+%{_datadir}/%{name}/completions/tar
+%{_datadir}/%{name}/completions/tcpdump
+%{_datadir}/%{name}/completions/unace
+%{_datadir}/%{name}/completions/unrar
+%{_datadir}/%{name}/completions/util-linux
+%{_datadir}/%{name}/completions/vncviewer
+%{_datadir}/%{name}/completions/vpnc
+%{_datadir}/%{name}/completions/wireless-tools
+%{_datadir}/%{name}/completions/wodim
+%{_datadir}/%{name}/completions/wol
+%{_datadir}/%{name}/completions/wtf
+%{_datadir}/%{name}/completions/wvdial
+%{_datadir}/%{name}/completions/xhost
+%{_datadir}/%{name}/completions/xm
+%{_datadir}/%{name}/completions/xmllint
+%{_datadir}/%{name}/completions/xmlwf
+%{_datadir}/%{name}/completions/xmms
+%{_datadir}/%{name}/completions/xmodmap
+%{_datadir}/%{name}/completions/xrandr
+%{_datadir}/%{name}/completions/xrdb
+%{_datadir}/%{name}/completions/xsltproc
+%{_datadir}/%{name}/completions/xz
+%{_datadir}/%{name}/completions/yp-tools
+%{_datadir}/%{name}/completions/yum
+%{_datadir}/%{name}/completions/yum-arch
+%{_datadir}/%{name}/completions/yum-utils
 %dir %{_datadir}/%{name}/helpers
 %attr(755,root,root) %{_datadir}/%{name}/helpers/perl
-
-# we list all files to be sure we have all of them handled by triggers
-%{_datadir}/%{name}/abook
-%{_datadir}/%{name}/ant
-%{_datadir}/%{name}/apt
-%{_datadir}/%{name}/aptitude
-%{_datadir}/%{name}/aspell
-%{_datadir}/%{name}/autoconf
-%{_datadir}/%{name}/automake
-%{_datadir}/%{name}/autorpm
-%{_datadir}/%{name}/bash-builtins
-%{_datadir}/%{name}/bind-utils
-%{_datadir}/%{name}/bitkeeper
-%{_datadir}/%{name}/bittorrent
-%{_datadir}/%{name}/bluez
-%{_datadir}/%{name}/brctl
-%{_datadir}/%{name}/bzip2
-%{_datadir}/%{name}/cardctl
-%{_datadir}/%{name}/chkconfig
-%{_datadir}/%{name}/chsh
-%{_datadir}/%{name}/cksfv
-%{_datadir}/%{name}/clisp
-%{_datadir}/%{name}/coreutils
-%{_datadir}/%{name}/cpio
-%{_datadir}/%{name}/crontab
-%{_datadir}/%{name}/cryptsetup
-%{_datadir}/%{name}/cups
-%{_datadir}/%{name}/cvs
-%{_datadir}/%{name}/cvsps
-%{_datadir}/%{name}/dd
-%{_datadir}/%{name}/dhclient
-%{_datadir}/%{name}/dict
-%{_datadir}/%{name}/dpkg
-%{_datadir}/%{name}/dsniff
-%{_datadir}/%{name}/dvd+rw-tools
-%{_datadir}/%{name}/e2fsprogs
-%{_datadir}/%{name}/findutils
-%{_datadir}/%{name}/freeciv-client
-%{_datadir}/%{name}/freeciv-server
-%{_datadir}/%{name}/fuse
-%{_datadir}/%{name}/gcc
-%{_datadir}/%{name}/gcl
-%{_datadir}/%{name}/gdb
-%{_datadir}/%{name}/genisoimage
-%{_datadir}/%{name}/getent
-%{_datadir}/%{name}/gkrellm
-%{_datadir}/%{name}/gnatmake
-%{_datadir}/%{name}/gpg
-%{_datadir}/%{name}/gpg2
-%{_datadir}/%{name}/gzip
-%{_datadir}/%{name}/heimdal
-%{_datadir}/%{name}/hping2
-%{_datadir}/%{name}/iconv
-%{_datadir}/%{name}/iftop
-%{_datadir}/%{name}/ifupdown
-%{_datadir}/%{name}/imagemagick
-%{_datadir}/%{name}/info
-%{_datadir}/%{name}/ipmitool
-%{_datadir}/%{name}/iproute2
-%{_datadir}/%{name}/ipsec
-%{_datadir}/%{name}/iptables
-%{_datadir}/%{name}/ipv6calc
-%{_datadir}/%{name}/isql
-%{_datadir}/%{name}/jar
-%{_datadir}/%{name}/java
-%{_datadir}/%{name}/k3b
-%{_datadir}/%{name}/ldapvi
-%{_datadir}/%{name}/lftp
-%{_datadir}/%{name}/lilo
-%{_datadir}/%{name}/links
-%{_datadir}/%{name}/lrzip
-%{_datadir}/%{name}/lsof
-%{_datadir}/%{name}/lvm
-%{_datadir}/%{name}/lzma
-%{_datadir}/%{name}/lzop
-%{_datadir}/%{name}/mailman
-%{_datadir}/%{name}/make
-%{_datadir}/%{name}/man
-%{_datadir}/%{name}/mc
-%{_datadir}/%{name}/mcrypt
-%{_datadir}/%{name}/mdadm
-%{_datadir}/%{name}/medusa
-%{_datadir}/%{name}/minicom
-%{_datadir}/%{name}/module-init-tools
-%{_datadir}/%{name}/mount
-%{_datadir}/%{name}/mplayer
-%{_datadir}/%{name}/msynctool
-%{_datadir}/%{name}/mtx
-%{_datadir}/%{name}/munin
-%{_datadir}/%{name}/munin-node
-%{_datadir}/%{name}/mutt
-%{_datadir}/%{name}/mysqladmin
-%{_datadir}/%{name}/mysqldump
-%{_datadir}/%{name}/ncftp
-%{_datadir}/%{name}/net-tools
-%{_datadir}/%{name}/nmap
-%{_datadir}/%{name}/ntpdate
-%{_datadir}/%{name}/open-iscsi
-%{_datadir}/%{name}/openldap
-%{_datadir}/%{name}/openssl
-%{_datadir}/%{name}/pear
-%{_datadir}/%{name}/perl
-%{_datadir}/%{name}/phing
-%{_datadir}/%{name}/pine
-%{_datadir}/%{name}/pkg-config
-%{_datadir}/%{name}/pm-utils
-%{_datadir}/%{name}/poldek
-%{_datadir}/%{name}/postfix
-%{_datadir}/%{name}/postgresql
-%{_datadir}/%{name}/povray
-%{_datadir}/%{name}/procps
-%{_datadir}/%{name}/python
-%{_datadir}/%{name}/qdbus
-%{_datadir}/%{name}/qemu
-%{_datadir}/%{name}/quota-tools
-%{_datadir}/%{name}/rcs
-%{_datadir}/%{name}/rdesktop
-%{_datadir}/%{name}/resolvconf
-%{_datadir}/%{name}/rfkill
-%{_datadir}/%{name}/ri
-%{_datadir}/%{name}/rpcdebug
-%{_datadir}/%{name}/rpm
-%{_datadir}/%{name}/rrdtool
-%{_datadir}/%{name}/rsync
-%{_datadir}/%{name}/rtcwake
-%{_datadir}/%{name}/samba
-%{_datadir}/%{name}/sbcl
-%{_datadir}/%{name}/screen
-%{_datadir}/%{name}/service
-%{_datadir}/%{name}/sh
-%{_datadir}/%{name}/shadow
-%{_datadir}/%{name}/sitecopy
-%{_datadir}/%{name}/smartctl
-%{_datadir}/%{name}/snownews
-%{_datadir}/%{name}/sqlite3
-%{_datadir}/%{name}/ssh
-%{_datadir}/%{name}/sshfs
-%{_datadir}/%{name}/strace
-%{_datadir}/%{name}/svk
-%{_datadir}/%{name}/sysbench
-%{_datadir}/%{name}/sysctl
-%{_datadir}/%{name}/sysvinit
-%{_datadir}/%{name}/tar
-%{_datadir}/%{name}/tcpdump
-%{_datadir}/%{name}/unace
-%{_datadir}/%{name}/unrar
-%{_datadir}/%{name}/util-linux
-%{_datadir}/%{name}/vncviewer
-%{_datadir}/%{name}/vpnc
-%{_datadir}/%{name}/wireless-tools
-%{_datadir}/%{name}/wodim
-%{_datadir}/%{name}/wol
-%{_datadir}/%{name}/wtf
-%{_datadir}/%{name}/wvdial
-%{_datadir}/%{name}/xhost
-%{_datadir}/%{name}/xm
-%{_datadir}/%{name}/xmllint
-%{_datadir}/%{name}/xmlwf
-%{_datadir}/%{name}/xmms
-%{_datadir}/%{name}/xmodmap
-%{_datadir}/%{name}/xrandr
-%{_datadir}/%{name}/xrdb
-%{_datadir}/%{name}/xsltproc
-%{_datadir}/%{name}/xz
-%{_datadir}/%{name}/yp-tools
-%{_datadir}/%{name}/yum
-%{_datadir}/%{name}/yum-arch
-%{_datadir}/%{name}/yum-utils

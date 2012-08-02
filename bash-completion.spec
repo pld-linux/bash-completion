@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.0
-Release:	0.6
+Release:	0.7
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -21,8 +21,6 @@ Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 # Source3-md5:	09e4885be92e032400ed702f39925d85
 Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?revision=285425&view=co#/pear
 # Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
-# https://alioth.debian.org/tracker/?func=detail&atid=413095&aid=312910&group_id=100114
-Source5:	phing.sh
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
 URL:		http://bash-completion.alioth.debian.org/
@@ -74,8 +72,7 @@ cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/poldek
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/mysqldump
-cp -p %{SOURCE5} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/phing
-cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/phing
+cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
@@ -88,7 +85,7 @@ cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/phing
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
 
 # ?
-cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 
 # do not generate autodeps
 chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl

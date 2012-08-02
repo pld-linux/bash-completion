@@ -96,32 +96,6 @@ rm -rf $RPM_BUILD_ROOT
 %triggerpostun -- %{name} < 20050721-3.9
 sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 
-%triggerpostun -- %{name} < 20081219-0.1
-# don't do anything on --downgrade
-if [ $1 -le 1 ]; then
-	exit 0
-fi
-# No rpm in vservers
-if [ ! -x /bin/rpm ]; then
-	exit 0
-fi
-
-# This ugly trigger is here because we package same pathnames as ghost
-# meaning the files will lay around from previous package version.
-
-# get files which are ghost for us
-files=$(rpm -ql %{name}-%{version}-%{release} | grep %{_sysconfdir}/bash_completion.d/)
-
-# this is to get old pkg NVR, actually gives list of files that are
-# packaged by other versions than this installed one, which is ok even for
-# multiple bash-completion pkgs being installed.
-oldpkg=$(rpm -qf $(echo "$files") 2>/dev/null | grep -v 'is not' | sort -u | grep -v %{name}-%{version}-%{release})
-for a in $(rpm -ql $oldpkg | grep %{_sysconfdir}/bash_completion.d/); do
-	# remove files from old package (which are ghost in new pkg),
-	# if not already converted to symlink
-	[ -L $a ] || rm -f $a
-done
-
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS CHANGES README

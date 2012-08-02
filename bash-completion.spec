@@ -1,8 +1,6 @@
 # vim:ft=spec
 # TODO
-# - bittorrent complete doesn't actually handle our prognames
 # - use mkinitrd and update for geninitrd
-# - can we have duplicate trigger on pwdutils pkg? merge files?
 # - fix vim not to mark this file as bash
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha

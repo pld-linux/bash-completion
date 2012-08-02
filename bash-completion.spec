@@ -40,12 +40,12 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 bash-completion is a collection of shell functions that take advantage
-of the programmable completion feature of bash 2.04 and later.
+of the programmable completion feature of bash 4.1 and later.
 
 %description -l pl.UTF-8
 bash-completion jest kolekcją funkcji shella, które opierają się na
-wbudowanych rozszerzeniach basha 2.04 lub późniejszego umożliwiającego
-kompletowanie parametrów linii poleceń.
+wbudowanych rozszerzeniach basha 4.1 lub późniejszego umożliwiającego
+dopełnianie parametrów linii poleceń.
 
 %prep
 %setup -q
@@ -74,8 +74,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	profiledir=/etc/shrc.d
 
-cp -p completions/_yum yum
-cp -p completions/_yum-utils yum-utils
+cp -p completions/_yum $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum
+cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-utils
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
 # No PLD package or no such binary to complete on

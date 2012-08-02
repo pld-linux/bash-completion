@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.0
-Release:	0.5
+Release:	0.6
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -46,10 +46,7 @@ dopełnianie parametrów linii poleceń.
 
 %prep
 %setup -q
-cp -p %{SOURCE1} completions/poldek
-cp -p %{SOURCE3} completions/mysqldump
 cp -p %{SOURCE4} completions/pear
-cp -p %{SOURCE5} completions/phing
 %patch0 -p1
 %patch1 -p1
 
@@ -74,6 +71,11 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 cp -p completions/_yum $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum
 cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-utils
+
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/poldek
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/mysqldump
+cp -p %{SOURCE5} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/phing
+cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/phing
 
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl

@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.0
-Release:	0.3
+Release:	0.5
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -68,8 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 
 %{__make} install -j1 \
-	DESTDIR=$RPM_BUILD_ROOT \
-	profiledir=/etc/shrc.d
+	INSTALL="install -p" \
+	profiledir=/etc/shrc.d \
+	DESTDIR=$RPM_BUILD_ROOT
 
 cp -p completions/_yum $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum
 cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-utils
@@ -77,10 +78,12 @@ cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
 # No PLD package or no such binary to complete on
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{larch,lisp,monodevelop,p4,cowsay,cpan2dist}
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{larch,lisp,monodevelop,[pg]4,cowsay,cowthink,cpan2dist}
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{mkinitrd,rpmcheck}
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade} # FreeBSD Stuff
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,update-alternatives,lintian}
+# FreeBSD stuff
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade}
+# Debian stuff
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
 
 # ?
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d

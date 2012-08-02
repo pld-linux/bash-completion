@@ -8,7 +8,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.0
-Release:	0.2
+Release:	0.3
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -81,8 +81,6 @@ cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{mkinitrd,rpmcheck}
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade} # FreeBSD Stuff
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,update-alternatives,lintian}
-# no package to hook to
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/configure
 
 # ?
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d

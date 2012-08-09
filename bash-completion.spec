@@ -6,14 +6,13 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.0
-Release:	0.7
+Release:	0.8
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
 Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.bz2
 # Source0-md5:	0d903f398be8c8f24bc5ffa6f86127f8
 Source1:	%{name}-poldek.sh
-Source2:	%{name}.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 # Source3-md5:	09e4885be92e032400ed702f39925d85
@@ -82,8 +81,6 @@ cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 # Debian stuff
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
 
-# ?
-cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d
 
 # do not generate autodeps
 chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl

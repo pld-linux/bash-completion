@@ -1,11 +1,4 @@
-# builder(1) completion
-
-# retrieve tags/branches from current spec
-_builder_spec_tags() {
-	local cur=$1 spec=$2 res
-	res=$(git tag)
-	COMPREPLY=( $( compgen -W "$res" -- "$cur" ) )
-}
+# PLD Linux builder(1) script completion
 
 _builder()
 {
@@ -15,7 +8,7 @@ _builder()
 	case $prev in
 	-r)
 		local spec=*.spec
-		_builder_spec_tags $cur $spec
+		COMPREPLY=( $( compgen -W '$( git tag )' -- "$cur" ) )
 		return 0
 		;;
 	--with|--without)

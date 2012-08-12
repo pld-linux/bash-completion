@@ -40,15 +40,7 @@ _builder()
 			--with --without
 		' -- $cur ) )
 	else
-		# find which specfile to use
-		specfile=
-		for (( i=1; i < COMP_CWORD; i++ )); do
-			if [[ "${COMP_WORDS[i]}" == -@(?(build)file|f) ]]; then
-				specfile=${COMP_WORDS[i+1]}
-				break
-			fi
-		done
-		[ ! -f $specfile ] && return 0
+		_filedir spec
 	fi
 
 	return 0

@@ -23,8 +23,6 @@ _builder()
 
 	case $prev in
 	-r)
-		local spec
-		_builder_get_spec
 		COMPREPLY=( $( compgen -W '$( git tag )' -- "$cur" ) )
 		return 0
 		;;

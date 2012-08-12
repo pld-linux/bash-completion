@@ -9,40 +9,25 @@ _builder_spec_tags() {
 
 _builder()
 {
-	local cur prev first
+	local cur prev words cword
+	_init_completion || return
 
-	COMPREPLY=()
-	cur=`_get_cword`
-	prev=${COMP_WORDS[COMP_CWORD-1]}
-
-	case "$prev" in
-		-@(g|--get))
-			_filedir
-			return 0
-			;;
-		-r)
-			local spec=*.spec
-			_builder_spec_tags "$cur" "$spec"
-			return 0
-			;;
-		--with|--without)
-			./builder --show-avail-bconds automake.spec
-			return 0
-			;;
+	case $prev in
+	-r)
+		local spec=*.spec
+		_builder_spec_tags "$cur" "$spec"
+		return 0
+		;;
+	--with|--without)
+		$1 -nn -ncs --show-avail-bconds automake.spec
+		return 0
+		;;
 	esac
 
-	if [[ "$cur" == -* ]]; then
-		COMPREPLY=( $( compgen -W '
-			-5 -a5 -n5 -D -V -a -b -ba -bb -bp -bc -bi -bl -bs -B -c -cf -d -g
-			-h -l -m -nc -ncs -nd -nm -nu -ns -ns0 -nn -ske -q -r -A -R -RB
-			-FRB -sd -sdp -sf -sp -su -T -Tvs -Ts -Tv -Tp -tt -ir -v -u -un
-			-U -Upi -np
-			--with --without
-		' -- $cur ) )
+	if [[ $cur == -* ]]; then
+		COMPREPLY=( $( compgen -W '$( _parse_help "$1" )' -- "$cur" ) )
 	else
 		_filedir spec
 	fi
-
-	return 0
-}
+} &&
 complete -F _builder builder

@@ -1,5 +1,21 @@
 # PLD Linux builder(1) script completion
 
+# get active spec file from commandline
+# caller should make $spec local variable
+# TODO: it gets it wrong if some option arg is found before spec itself
+_builder_get_spec()
+{
+	local i
+	spec=
+	for (( i=1; i < ${#words[@]}-1; i++ )); do
+		if [[ ${words[i]} != -* ]]; then
+			spec=${words[i]}
+			break
+		fi
+	done
+	[[ ! -f $spec ]] && return 0
+}
+
 _builder()
 {
 	local cur prev words cword
@@ -7,12 +23,14 @@ _builder()
 
 	case $prev in
 	-r)
-		local spec=*.spec
+		local spec
+		_builder_get_spec
 		COMPREPLY=( $( compgen -W '$( git tag )' -- "$cur" ) )
 		return 0
 		;;
 	--with|--without)
-		local spec=*.spec
+		local spec
+		_builder_get_spec
 		$1 -nn -ncs --show-avail-bconds $spec
 		return 0
 		;;

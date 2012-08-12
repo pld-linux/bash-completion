@@ -27,9 +27,16 @@ _builder()
 		return 0
 		;;
 	--with|--without)
-		local spec
+		local spec bconds
 		_builder_get_spec
-		$1 -nn -ncs --show-avail-bconds $spec
+		bconds=$(
+			awk '
+			/^%changelog/ { exit }
+			/^%bcond_with/{
+				print $2
+			}' $spec
+		)
+		COMPREPLY=( $( compgen -W "$bconds" -- "$cur" ) )
 		return 0
 		;;
 	esac

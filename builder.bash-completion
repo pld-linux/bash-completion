@@ -15,11 +15,12 @@ _builder()
 	case $prev in
 	-r)
 		local spec=*.spec
-		_builder_spec_tags "$cur" "$spec"
+		_builder_spec_tags $cur $spec
 		return 0
 		;;
 	--with|--without)
-		$1 -nn -ncs --show-avail-bconds automake.spec
+		local spec=*.spec
+		$1 -nn -ncs --show-avail-bconds $spec
 		return 0
 		;;
 	esac

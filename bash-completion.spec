@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells

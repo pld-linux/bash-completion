@@ -1,5 +1,3 @@
-have poldek && {
-
 # poldek(1) completion
 #
 _poldek()
@@ -64,7 +62,5 @@ _poldek()
 	esac
 
 	return 0
-}
+} &&
 complete -F _poldek $nospace $filenames poldek
-
-}

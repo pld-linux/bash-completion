@@ -12,7 +12,7 @@ _poldek()
 		if [[ "$cur" == -* ]]; then
 			COMPREPLY=( $( compgen -W '--nodeps --nofollow --test' -- $cur ) )
 		else
-			_rpm_installed_packages
+			_xfunc rpm _rpm_installed_packages
 		fi
 		return 0
 		;;

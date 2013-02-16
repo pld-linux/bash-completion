@@ -41,7 +41,7 @@ dopełnianie parametrów linii poleceń.
 
 %prep
 %setup -q
-cp -p %{SOURCE4} completions/pear
+cp -p '%{SOURCE4}' completions/pear
 %patch0 -p1
 %patch1 -p1
 

@@ -5,13 +5,13 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	2.0
-Release:	3
+Version:	2.1
+Release:	1
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
 Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.bz2
-# Source0-md5:	0d903f398be8c8f24bc5ffa6f86127f8
+# Source0-md5:	4e2a9f11a4042a38ee79ddcd048e8b9e
 Source1:	%{name}-poldek.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump

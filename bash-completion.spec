@@ -16,7 +16,7 @@ Source1:	%{name}-poldek.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump
 # Source3-md5:	09e4885be92e032400ed702f39925d85
-Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?revision=285425&view=co#/pear
+Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?revision=285425&view=co?/pear
 # Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch

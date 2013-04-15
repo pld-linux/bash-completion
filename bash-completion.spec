@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -63,9 +63,6 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
 	INSTALL="install -p" \
 	profiledir=/etc/shrc.d \
 	DESTDIR=$RPM_BUILD_ROOT
-
-cp -p completions/_yum $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum
-cp -p completions/_yum-utils $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/yum-utils
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/poldek
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/mysqldump

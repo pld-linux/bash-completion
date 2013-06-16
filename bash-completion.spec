@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -24,7 +24,7 @@ URL:		http://bash-completion.alioth.debian.org/
 BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 4.1
-Requires:	issue
+Requires:	pld-release
 Obsoletes:	bash-completion-rpm-cache
 Conflicts:	rpm < 4.4.9-44
 BuildArch:	noarch

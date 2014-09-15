@@ -79,6 +79,8 @@ cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade}
 # Debian stuff
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
+# NetworkManager stuff
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/nmcli
 
 
 # do not generate autodeps

@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.1
-Release:	5
+Release:	6
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -69,7 +69,7 @@ cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/mysqldump
 cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 
 # util-linux
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{cal,chsh,dmesg,eject,hexdump,hwclock,ionice,look,mount,newgrp,renice,rtcwake,su,umount}
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{cal,chsh,dmesg,eject,hexdump,hwclock,ionice,look,mount,newgrp,renice,rtcwake,su,umount,rfkill}
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
 # No PLD package or no such binary to complete on
@@ -81,7 +81,6 @@ cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
 # NetworkManager stuff
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/nmcli
-
 
 # do not generate autodeps
 chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl

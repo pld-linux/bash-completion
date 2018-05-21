@@ -5,13 +5,13 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	2.1
-Release:	6
+Version:	2.8
+Release:	1
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
-Source0:	http://bash-completion.alioth.debian.org/files/%{name}-%{version}.tar.bz2
-# Source0-md5:	4e2a9f11a4042a38ee79ddcd048e8b9e
+Source0:	https://github.com/scop/%{name}/releases/download/%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	201b6ae62f7d5fb5b1b25e34427db919
 Source1:	%{name}-poldek.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump
@@ -20,7 +20,7 @@ Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?
 # Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
-URL:		http://bash-completion.alioth.debian.org/
+URL:		https://github.com/scop/bash-completion
 BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	sed >= 4.0
 Requires:	bash >= 4.1
@@ -69,7 +69,7 @@ cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/mysqldump
 cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 
 # util-linux
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{cal,chsh,dmesg,eject,hexdump,hwclock,ionice,look,mount,newgrp,renice,rtcwake,su,umount,rfkill}
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{mount,umount}
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
 # No PLD package or no such binary to complete on
@@ -79,8 +79,6 @@ cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade}
 # Debian stuff
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
-# NetworkManager stuff
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/nmcli
 
 # do not generate autodeps
 chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl
@@ -93,7 +91,7 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS CHANGES README
+%doc AUTHORS CHANGES README.md
 /etc/shrc.d/bash_completion.sh
 %dir %{_sysconfdir}/bash_completion.d
 %dir %{_datadir}/%{name}
@@ -102,4 +100,5 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %{_datadir}/%{name}/completions/*
 %dir %{_datadir}/%{name}/helpers
 %attr(755,root,root) %{_datadir}/%{name}/helpers/perl
+%attr(755,root,root) %{_datadir}/%{name}/helpers/python
 %{_npkgconfigdir}/bash-completion.pc

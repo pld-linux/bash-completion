@@ -21,6 +21,7 @@ Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
 Patch2:		%{name}-ip_addresses.patch
+Patch3:		%{name}-no_mtr.patch
 URL:		https://github.com/scop/bash-completion
 BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	sed >= 4.0
@@ -46,6 +47,7 @@ cp -p '%{SOURCE4}' completions/pear
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f

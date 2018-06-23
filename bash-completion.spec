@@ -20,6 +20,7 @@ Source4:	http://svn.php.net/viewvc/pear2/sandbox/PEAR_BashCompletion/trunk/pear?
 # Source4-md5:	8ce77e4459e2c45e2096da8d03c8f43d
 Patch0:		%{name}-rpm-cache.patch
 Patch1:		pear.patch
+Patch2:		%{name}-ip_addresses.patch
 URL:		https://github.com/scop/bash-completion
 BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	sed >= 4.0
@@ -44,6 +45,7 @@ dopełnianie parametrów linii poleceń.
 cp -p '%{SOURCE4}' completions/pear
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f

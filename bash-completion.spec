@@ -5,13 +5,14 @@
 Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
-Version:	2.8
-Release:	2
+Version:	2.11
+Release:	1
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
+#Source0Download: https://github.com/scop/bash-completion/releases
 Source0:	https://github.com/scop/%{name}/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	201b6ae62f7d5fb5b1b25e34427db919
+# Source0-md5:	2514c6772d0de6254758b98c53f91861
 Source1:	%{name}-poldek.sh
 # https://bugs.launchpad.net/ubuntu/+source/mysql-dfsg-5.0/+bug/106975
 Source3:	http://launchpadlibrarian.net/19164189/mysqldump
@@ -24,7 +25,7 @@ Patch2:		%{name}-ip_addresses.patch
 Patch3:		%{name}-no_mtr.patch
 URL:		https://github.com/scop/bash-completion
 BuildRequires:	sed >= 4.0
-Requires(triggerpostun):	sed >= 4.0
+Requires(post):	sed >= 4.0
 Requires:	bash >= 4.1
 Requires:	pld-release
 Obsoletes:	bash-completion-rpm-cache
@@ -40,6 +41,19 @@ of the programmable completion feature of bash 4.1 and later.
 bash-completion jest kolekcją funkcji shella, które opierają się na
 wbudowanych rozszerzeniach basha 4.1 lub późniejszego umożliwiającego
 dopełnianie parametrów linii poleceń.
+
+%package devel
+Summary:	Development files for bash-completion
+Summary(pl.UTF-8):	Pliki programistyczne do pakietu bash-completion
+Group:		Development/Tools
+# doesn't require base: it just contain paths configuration
+Conflicts:	bash-completion < 1:2.11
+
+%description devel
+pkg-config and cmake files for bash-completion packages development.
+
+%description devel -l pl.UTF-8
+Pliki pkg-configa i cmake'a do tworzenia pakietów bash-completion.
 
 %prep
 %setup -q
@@ -72,8 +86,6 @@ cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/poldek
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/mysqldump
 cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 
-# util-linux
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{mount,umount}
 # No package matches '*/apache2ctl'
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/apache2ctl
 # No PLD package or no such binary to complete on
@@ -105,4 +117,8 @@ sed -i -e '/^# START bash completion/,/^# END bash completion/d' /etc/bashrc
 %dir %{_datadir}/%{name}/helpers
 %attr(755,root,root) %{_datadir}/%{name}/helpers/perl
 %attr(755,root,root) %{_datadir}/%{name}/helpers/python
+
+%files devel
+%defattr(644,root,root,755)
 %{_npkgconfigdir}/bash-completion.pc
+%{_datadir}/cmake/bash-completion

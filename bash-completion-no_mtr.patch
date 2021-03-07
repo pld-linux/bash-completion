@@ -1,10 +1,9 @@
-diff -ruNp bash-completion-2.8.orig/bash_completion bash-completion-2.8/bash_completion
---- bash-completion-2.8.orig/bash_completion	2018-03-17 09:25:59.000000000 +0100
-+++ bash-completion-2.8/bash_completion	2018-06-24 00:45:30.480896640 +0200
-@@ -1659,7 +1659,7 @@ _known_hosts_real()
+--- bash-completion-2.11/bash_completion.orig	2021-03-06 22:24:43.862534689 +0100
++++ bash-completion-2.11/bash_completion	2021-03-07 06:44:50.513308049 +0100
+@@ -1801,7 +1801,7 @@ _known_hosts_real()
  
  } # _known_hosts_real()
- complete -F _known_hosts traceroute traceroute6 tracepath tracepath6 \
+ complete -F _known_hosts traceroute traceroute6 \
 -    fping fping6 telnet rsh rlogin ftp dig mtr ssh-installkeys showmount
 +    fping fping6 telnet rsh rlogin ftp dig ssh-installkeys showmount
  

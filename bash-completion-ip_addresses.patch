@@ -1,14 +1,18 @@
-diff -ruNp bash-completion-2.8.orig/bash_completion bash-completion-2.8/bash_completion
---- bash-completion-2.8.orig/bash_completion	2018-03-17 09:25:59.000000000 +0100
-+++ bash-completion-2.8/bash_completion	2018-06-24 00:00:18.077840392 +0200
-@@ -919,9 +919,7 @@ _ip_addresses()
- {
+--- bash-completion-2.11/bash_completion.orig	2021-03-06 22:21:09.007031994 +0100
++++ bash-completion-2.11/bash_completion	2021-03-06 22:24:28.382618551 +0100
+@@ -981,11 +981,10 @@ _ip_addresses()
+         *) n= ;;
+     esac
      local PATH=$PATH:/sbin
-     COMPREPLY+=( $( compgen -W \
--        "$( { LC_ALL=C ifconfig -a || ip addr show; } 2>/dev/null | command sed -ne \
--            's/.*addr:\([^[:space:]]*\).*/\1/p' -ne \
--            's|.*inet[[:space:]]\{1,\}\([^[:space:]/]*\).*|\1|p' )" \
-+        "$( ip -o addr show 2>/dev/null | command awk '{ gsub(/\/.*$/, "", $4); print $4 }' | sort )" \
-         -- "$cur" ) )
+-    local addrs=$({
+-        LC_ALL=C ifconfig -a || ip addr show
+-    } 2>/dev/null |
+-        command sed -e 's/[[:space:]]addr:/ /' -ne \
+-            "s|.*inet${n}[[:space:]]\{1,\}\([^[:space:]/]*\).*|\1|p")
++    local addrs=$(
++        LC_ALL=C ip -o addr show
++    2>/dev/null |
++	command awk '{ gsub(/\/.*$/, "", $4); print $4 }' | sort)
+     COMPREPLY+=($(compgen -W "$addrs" -- "${cur-}"))
  }
  

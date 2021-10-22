@@ -10,8 +10,8 @@
 -        command sed -e 's/[[:space:]]addr:/ /' -ne \
 -            "s|.*inet${n}[[:space:]]\{1,\}\([^[:space:]/]*\).*|\1|p")
 +    local addrs=$(
-+        LC_ALL=C ip -o addr show
-+    2>/dev/null |
++        LC_ALL=C ip -o addr show \
++    2>/dev/null | \
 +	command awk '{ gsub(/\/.*$/, "", $4); print $4 }' | sort)
      COMPREPLY+=($(compgen -W "$addrs" -- "${cur-}"))
  }

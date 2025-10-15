@@ -6,7 +6,7 @@ Summary:	bash-completion offers programmable completion for bash
 Summary(pl.UTF-8):	Programowalne uzupełnianie nazw dla basha
 Name:		bash-completion
 Version:	2.11
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Shells
@@ -95,6 +95,8 @@ cp -p completions/pear $RPM_BUILD_ROOT%{_datadir}/%{name}/completions
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{kldload,portupgrade}
 # Debian stuff
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/{apt-build,bts,dselect,reportbug,alternatives,update-alternatives,lintian,lintian-info}
+# prefer upstream completion
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/completions/interdiff
 
 # do not generate autodeps
 chmod a-x $RPM_BUILD_ROOT%{_datadir}/%{name}/helpers/perl
